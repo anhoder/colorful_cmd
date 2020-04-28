@@ -1,6 +1,6 @@
-
-import 'package:console/utils.dart';
+import 'package:command/command.dart';
 
 void main(List<String> args) {
-  print(bresenham(2,2,3,4));
+  var kernel = ConsoleKernel();
+  print(kernel.description);
 }

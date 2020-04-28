@@ -1,7 +1,7 @@
 part of command;
 
-abstract class Kernel {
-  List<ICommand> commands;
+abstract class IKernel {
+  List<cr.Command> commands;
 
   void run(IInput input, IOutput output);
 }
