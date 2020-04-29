@@ -1,6 +1,6 @@
 part of command;
 
-Map<String, String> alpha_mapping = {
+const Map<String, String> ALPHA_MAPPING = {
   ' ': '''
 
       
@@ -593,15 +593,12 @@ Map<String, String> alpha_mapping = {
 ''',
 };
 
-String formatChars(String str, [bool isColoful = false]) {
+String formatChars(String str) {
   var chars = str.toUpperCase().split('');
   var format = chars.map((item) {
     var char = '';
-    if (alpha_mapping.containsKey(item)) {
-      char = alpha_mapping[item];
-    }
-    if (isColoful) {
-      char = Color.random();
+    if (ALPHA_MAPPING.containsKey(item)) {
+      char = ALPHA_MAPPING[item];
     }
     return char.split('\n');
   });
