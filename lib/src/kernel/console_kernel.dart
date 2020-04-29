@@ -1,18 +1,22 @@
 part of command;
 
 class ConsoleKernel extends cr.CommandRunner{
-  ConsoleKernel([name = 'Console Kernel', description = 'The Kernel of dart-command.']): super(name, description);
+  bool showTitle = true;
+
+  ConsoleKernel([name = 'Command', description = 'The Kernel of dart-command.']): 
+    super(name, TextPen().yellow().text(description).yellow().toString());
 
   @override
   Future run(Iterable<String> args) {
-    displayConsoleInfo();
+    displayTitle();
     return super.run(args);
   }
 
-  void displayConsoleInfo() {
-    TextPen().green().text(format_chars(executableName))
-      .text('\n')
-      .yellow().text(description)
-      .print();
+  void displayTitle() {
+    if (showTitle) {
+      TextPen().blue().text(formatChars(executableName))
+        .text('\n')
+        .print();
+    }
   }
 }

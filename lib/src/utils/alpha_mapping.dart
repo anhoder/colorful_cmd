@@ -593,12 +593,15 @@ Map<String, String> alpha_mapping = {
 ''',
 };
 
-String format_chars(String str) {
+String formatChars(String str, [bool isColoful = false]) {
   var chars = str.toUpperCase().split('');
   var format = chars.map((item) {
     var char = '';
     if (alpha_mapping.containsKey(item)) {
       char = alpha_mapping[item];
+    }
+    if (isColoful) {
+      char = Color.random();
     }
     return char.split('\n');
   });
