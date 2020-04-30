@@ -4,7 +4,7 @@ class ConsoleKernel<T> extends cr.CommandRunner{
   bool get showTitle => true;
   Color get titleColor => randomColor();
 
-  ConsoleKernel([name = 'Command', description = 'A library for building a beautiful command application by dart.']): 
+  ConsoleKernel([name = 'dart-cmd', description = 'A library for building a beautiful command line application in dart.']): 
     super(name, description);
 
 
@@ -17,8 +17,7 @@ class ConsoleKernel<T> extends cr.CommandRunner{
       .green('  ${wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
       .gold('Global options: \n')
       .green('  ${argParser.usage}\n\n')
-      .text('${getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n\n')
-      .white(wrap('Run "$executableName help <command>" for more information about a command.\n\n'));
+      .text('${getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
 
     if (usageFooter != null) {
       pen.text('\n${wrap(usageFooter)}\n\n');
@@ -62,7 +61,11 @@ class ConsoleKernel<T> extends cr.CommandRunner{
 
     // Show the commands alphabetically.
     names = names.toList()..sort();
-    var length = names.map((name) => name.length).reduce(max);
+    var length = names.map((name) {
+      if (name == null) throw MustNotNullException('Command => `name`');
+      if (commands[name].description == null) throw MustNotNullException('Command(`$name`) => `description`');
+      return name.length;
+    }).reduce(max);
 
     var buffer = StringBuffer(ColorText().yellow('Available ${isSubcommand ? "sub" : ""}commands:'));
     var columnStart = length + 5;

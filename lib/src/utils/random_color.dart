@@ -1,4 +1,4 @@
-part of command;
+part of utils;
 
 const List<Color> COLOR_MAP = [
   Color.RED,

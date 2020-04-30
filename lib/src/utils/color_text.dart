@@ -1,4 +1,4 @@
-part of command;
+part of utils;
 
 class ColorText extends TextPen {
 

@@ -1,7 +1,22 @@
 import 'package:command/command.dart';
+import 'package:command/logger.dart';
+
+class A extends Command {
+  @override
+  String get description => '123';
+
+  @override
+  ILogHandler get logger => DBLogHandler();
+
+  @override
+  String get name => '123';
+  
+}
 
 void main(List<String> args) {
   var kernel = ConsoleKernel();
+  var cmd = A();
+  kernel.addCommand(cmd);
   kernel.run(args);
 
   // var colorText = ColorText();
