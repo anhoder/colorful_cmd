@@ -1,12 +1,13 @@
+
 import 'package:command/command.dart';
 import 'package:command/logger.dart';
 
 class A extends Command {
   @override
-  String get description => '123';
+  String get description => null;
 
   @override
-  ILogHandler get logger => DBLogHandler();
+  List<ILogHandler> get loggers => null;
 
   @override
   String get name => '123';
@@ -14,7 +15,7 @@ class A extends Command {
 }
 
 void main(List<String> args) {
-  var kernel = ConsoleKernel();
+  var kernel = ConsoleKernel(logHandlers: [StdLogHandler(), FileLogHandler()]);
   var cmd = A();
   kernel.addCommand(cmd);
   kernel.run(args);

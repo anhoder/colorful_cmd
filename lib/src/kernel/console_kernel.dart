@@ -3,34 +3,43 @@ part of command;
 class ConsoleKernel<T> extends cr.CommandRunner{
   bool get showTitle => true;
   Color get titleColor => randomColor();
+  Logger _logger;
 
-  ConsoleKernel([name = 'dart-cmd', description = 'A library for building a beautiful command line application in dart.']): 
-    super(name, description);
+  ConsoleKernel({name = 'dart-cmd', 
+    description = 'A library for building a beautiful command line application in dart.', 
+    List<ILogHandler> logHandlers}): super(name, description) {
+      _logger = Logger(logHandlers: logHandlers);
+    }
 
 
   @override
   String get usage {
-    var usagePrefix = 'Usage: \n';
-    var pen = ColorText()
-      .lightCyan(wrap('$description\n\n'))
-      .gold(wrap(usagePrefix))
-      .green('  ${wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
-      .gold('Global options: \n')
-      .green('  ${argParser.usage}\n\n')
-      .text('${getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
+    try {
+      var usagePrefix = 'Usage: \n';
+      var pen = ColorText()
+        .lightCyan(wrap('$description\n\n'))
+        .gold(wrap(usagePrefix))
+        .green('  ${wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
+        .gold('Global options: \n')
+        .green('  ${argParser.usage}\n\n')
+        .text('${getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
 
-    if (usageFooter != null) {
-      pen.text('\n${wrap(usageFooter)}\n\n');
+      if (usageFooter != null) {
+        pen.text('\n${wrap(usageFooter)}\n\n');
+      }
+
+      return pen.toString();
+    } on Exception catch (e, s) {
+      _logger.error(e).trace('Call stack: \n$s');
+      return '';
     }
-
-    return pen.toString();
   }
 
 
   @override
   Future run(Iterable<String> args) {
-    displayTitle();
-    return super.run(args);
+      displayTitle();
+      return super.run(args);
   }
 
 

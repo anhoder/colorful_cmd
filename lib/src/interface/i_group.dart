@@ -1,8 +1,8 @@
 part of command;
 
 abstract class IGroup {
-  String name;
-  String description;
-  List<IGroup> sonGroups;
-  List<Command> commands;
+  String get name;
+  String get description;
+  List<IGroup> get sonGroups;
+  List<Command> get commands;
 }

@@ -2,7 +2,7 @@ part of command;
 
 abstract class Command extends cr.Command {
 
-  ILogHandler get logger;
+  List<ILogHandler> get loggers;
 
   IInput _input;
 
