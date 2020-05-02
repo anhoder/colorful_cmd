@@ -2,7 +2,6 @@ part of command;
 
 abstract class IGroup<T> {
   String get name;
-  String get description;
   List<IGroup<T>> get groups;
   List<Cmd<T>> get commands;
 

@@ -62,8 +62,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
 
   void addGroupCommands() {
     groupsCommands.forEach((command) {
-      if (command.name == null) throw VariableIsNull('Cmd(${command.runtimeType})\'s name');
-      if (command.description == null) throw VariableIsNull('Cmd(${command.runtimeType})\'s description');
+      if (command.name == null) throw VariableIsNull('${command.runtimeType}\'s name');
+      if (command.description == null) throw VariableIsNull('${command.runtimeType}\'s description');
       addCommand(command);
     });
   }
@@ -137,8 +137,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     var groupCmdMaps = <String, String>{};
     var cmdsNotInGroup = <String>[];
     names.forEach((name) {
-      if (name == null) throw VariableIsNull('Cmd(${commands[name].runtimeType})\'s name');
-      if (commands[name].description == null) throw VariableIsNull('Cmd(${commands[name].runtimeType})\'s description');
+      if (name == null) throw VariableIsNull('${commands[name].runtimeType}\'s name');
+      if (commands[name].description == null) throw VariableIsNull('${commands[name].runtimeType}\'s description');
       var index = name.indexOf(':');
       if (index >= 0) {
         groupCmdMaps[name] = name.substring(0, index);
@@ -171,6 +171,7 @@ class ConsoleKernel<T> extends CommandRunner<T>{
 
 
     /// display group commands
+    var lastGroup = '';
     for (var name in names) {
       if (!groupCmdMaps.containsKey(name)) {
         continue;
@@ -179,7 +180,10 @@ class ConsoleKernel<T> extends CommandRunner<T>{
           start: columnStart, length: lineLength);
       
       buffer.writeln();
-      buffer.writeln(ColorText().yellow(' ${groupCmdMaps[name]}'));
+      if (lastGroup != groupCmdMaps[name]) {
+        buffer.writeln(ColorText().yellow(' ${groupCmdMaps[name]}'));
+        lastGroup = groupCmdMaps[name];
+      }
       buffer.write(ColorText().green('  ${padRight(name, length)}   ').white(lines.first));
 
       for (var line in lines.skip(1)) {

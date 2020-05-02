@@ -35,8 +35,6 @@ class Bar extends Cmd {
 }
 
 class TestGroup extends IGroup {
-  @override
-  String get description => 'test group description';
 
   @override
   String get name => 'test';

@@ -1,6 +1,7 @@
 part of utils;
 
 const Map<String, String> ALPHA_MAPPING = {
+  // blank
   ' ': '''
 
       
