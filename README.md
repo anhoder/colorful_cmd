@@ -53,3 +53,7 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 // Window 窗口应用（虚类，需要继承）
 // bresenham() bresenham算法 用于画圆
 ```
+
+
+
+> LoggerHandler将group的日志处理器继承下来

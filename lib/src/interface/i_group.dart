@@ -3,9 +3,9 @@ part of command;
 abstract class IGroup<T> {
   String get name;
   List<IGroup<T>> get groups;
-  List<Cmd<T>> get commands;
+  List<ICmd<T>> get commands;
 
-  List<Cmd<T>> getAllCommands() {
+  List<ICmd<T>> getAllCommands() {
     var res = commands ?? [];
 
     if (groups != null) {

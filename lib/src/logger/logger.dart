@@ -66,14 +66,14 @@ class Logger {
       case LogLevel.info:
         logHandlers.forEach((logHandler) {
           var colorful = logHandler.colorful ?? false;
-          var logContent = colorful ? ColorText().green(log).toString() : log;
+          var logContent = colorful ? ColorText().cyan(log).toString() : log;
           logHandler.handleInfo(logContent);
         });
         return ;
       case LogLevel.debug:
         logHandlers.forEach((logHandler) {
           var colorful = logHandler.colorful ?? false;
-          var logContent = colorful ? ColorText().cyan(log).toString() : log;
+          var logContent = colorful ? ColorText().green(log).toString() : log;
           logHandler.handleDebug(logContent);
         });
         return ;

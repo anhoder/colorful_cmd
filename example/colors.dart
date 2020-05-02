@@ -1,7 +1,8 @@
 import 'package:command/command.dart';
 import 'package:command/logger.dart';
 
-class Foo extends Cmd {
+/// Foo Command
+class Foo extends ICmd {
 
   @override
   String name = 'foo';
@@ -9,16 +10,27 @@ class Foo extends Cmd {
   String description = 'this is foo';
 
   @override
-  List<ILogHandler> get logHandlers => [FileLogHandler()];
+  List<ILogHandler> get logHandlers => [StdLogHandler(), FileLogHandler()];
   
   @override
   void run() {
-    print(description);
+    info(argResults.arguments.toList().toString());
   }
+
+  @override
+  List<Flag> get flags => [
+    Flag('debug', abbr: 'd', defaultsTo: false, negatable: true, help: 'run in debug mode'),
+    Flag('t', abbr: 't', defaultsTo: false, negatable: true, help: 'run in debug mode')
+  ];
+
+  @override
+  List<Option> get options => null;
 
 }
 
-class Bar extends Cmd {
+
+/// Bar Command
+class Bar extends ICmd {
 
   @override
   String name = 'bar';
@@ -32,15 +44,23 @@ class Bar extends Cmd {
   void run() {
     print(description);
   }
+
+  @override
+  List<Flag> get flags => null;
+
+  @override
+  List<Option> get options => null;
 }
 
+
+/// Test Group
 class TestGroup extends IGroup {
 
   @override
   String get name => 'test';
 
   @override
-  List<Cmd> get commands => [
+  List<ICmd> get commands => [
     Foo(),
     Bar()
   ];
@@ -50,6 +70,8 @@ class TestGroup extends IGroup {
 
 }
 
+
+/// Kernel
 void main(List<String> args) {
   var kernel = ConsoleKernel();
   kernel.addCommand(Foo());

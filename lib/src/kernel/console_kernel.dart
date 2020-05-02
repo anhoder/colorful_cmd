@@ -32,28 +32,28 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     return this;
   }
 
-  ConsoleKernel<T> addCommands(List<Cmd<T>> commands) {
+  ConsoleKernel<T> addCommands(List<ICmd<T>> commands) {
     commands.forEach((command) => addCommand(command));
     return this;
   }
 
 
   @override
-  String get usage => '${getTitle()}${getDescription()}\n\n${usageWithoutTitleAndDescription}';
+  String get usage => '${_getTitle()}${_getDescription()}\n\n${_usageWithoutTitleAndDescription}';
 
 
   /// uasge without title and description
-  String get usageWithoutTitleAndDescription {
+  String get _usageWithoutTitleAndDescription {
     var usagePrefix = 'Usage: \n';
     var pen = ColorText()
-      .gold(wrap(usagePrefix))
-      .white('  ${wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
+      .gold(_wrap(usagePrefix))
+      .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
       .gold('Global options: \n')
       .white('  ${argParser.usage}\n\n')
-      .text('${getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
+      .text('${_getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
 
     if (usageFooter != null) {
-      pen.text('\n${wrap(usageFooter)}\n\n');
+      pen.cyan('\n${_wrap(usageFooter)}\n\n');
     }
 
     return pen.toString();
@@ -70,8 +70,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
 
 
   /// get all commands that belongs to group
-  List<Cmd<T>> get groupsCommands {
-    var commands = <Cmd<T>>[];
+  List<ICmd<T>> get groupsCommands {
+    var commands = <ICmd<T>>[];
     _groups.forEach((group) => commands.addAll(group.getAllCommands()));
     return commands;
   }
@@ -88,6 +88,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
       _logger.error('\n\n$e');  
     } catch(e, s) {
       _logger.error(e).trace('Call stack: \n$s');
+    } finally {
+      exit(0);
     }
     return null;
   }
@@ -96,11 +98,11 @@ class ConsoleKernel<T> extends CommandRunner<T>{
   /// throw usage exception
   @override
   void usageException(String message) =>
-      throw UsageException(message, usageWithoutTitleAndDescription);
+      throw UsageException(message, _usageWithoutTitleAndDescription);
 
 
   /// get title.
-  String getTitle() {
+  String _getTitle() {
     if (showTitle) {
       return TextPen().setColor(titleColor)
         .text('${formatChars(executableName)}\n')
@@ -111,17 +113,17 @@ class ConsoleKernel<T> extends CommandRunner<T>{
   }
 
   /// get colorful description.
-  String getDescription() {
+  String _getDescription() {
     return ColorText().cyan(description).toString();
   }
 
 
-  String wrap(String text, {int hangingIndent}) => wrapText(text,
+  String _wrap(String text, {int hangingIndent}) => wrapText(text,
       length: argParser.usageLineLength, hangingIndent: hangingIndent);
 
   
   /// get commands usage.
-  String getCommandUsage(Map<String, Command> commands,
+  String _getCommandUsage(Map<String, Command> commands,
       {bool isSubcommand = false, int lineLength}) {
     // Don't include aliases.
     var names =
