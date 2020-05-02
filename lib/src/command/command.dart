@@ -1,10 +1,19 @@
 part of command;
 
-abstract class Command extends cr.Command {
+abstract class Cmd<T> extends Command<T> {
 
-  List<ILogHandler> get loggers;
+  @override
+  String name;
+  @override
+  String description;
+  Logger logger;
 
-  IInput _input;
+  List<ILogHandler> get logHandlers;
+  
+  Cmd() {
+    logger = Logger(logHandlers: logHandlers);
+  }
 
-  IOutput _output;
+  String wrap(String text, {int hangingIndent}) => wrapText(text,
+    length: argParser.usageLineLength, hangingIndent: hangingIndent);
 }

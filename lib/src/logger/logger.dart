@@ -21,7 +21,7 @@ class Logger {
   String format;
 
   Logger({this.logHandlers, this.format}) {
-    logHandlers ??= [StdLogHandler(), FileLogHandler()];
+    logHandlers ??= [StdLogHandler()];
     format ??= '[DATE] [LEVEL] LOG';
   }
 
