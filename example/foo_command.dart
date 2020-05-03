@@ -1,6 +1,5 @@
 import 'package:command/command.dart';
 import 'package:command/logger.dart';
-import 'package:command/utils.dart';
 
 class FooCommand extends ICmd {
   @override
