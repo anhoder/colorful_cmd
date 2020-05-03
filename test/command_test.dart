@@ -1,4 +1,4 @@
-import 'package:command/command.dart';
+import 'package:colorful_cmd/command.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:args/src/utils.dart';
-import 'package:command/exception.dart';
-import 'package:command/logger.dart';
-import 'package:command/utils.dart';
+import 'package:colorful_cmd/exception.dart';
+import 'package:colorful_cmd/logger.dart';
+import 'package:colorful_cmd/utils.dart';
 import 'package:console/console.dart';
 
 part 'src/interface/i_group.dart';

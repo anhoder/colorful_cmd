@@ -6,7 +6,7 @@ class ConsoleKernel<T> extends CommandRunner<T>{
   Logger _logger;
   List<IGroup<T>> _groups = [];
 
-  ConsoleKernel({name = 'dart-cmd', 
+  ConsoleKernel({name = 'Command', 
     description = 'A library for building a beautiful command line application in dart.', 
     List<ILogHandler> logHandlers,
     this.showTitle = true,

@@ -1,4 +1,4 @@
-import 'package:command/command.dart';
+import 'package:colorful_cmd/command.dart';
 import 'root_command.dart';
 import 'test_group.dart';
 

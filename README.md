@@ -10,8 +10,8 @@ A library for building a beautiful command line application in dart.
 A simple usage example:
 
 ```dart
-import 'package:command/command.dart';
-import 'package:command/logger.dart';
+import 'package:dart_command/command.dart';
+import 'package:dart_command/logger.dart';
 
 void main(List<String> args) {
   var kernel = ConsoleKernel();

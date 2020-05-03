@@ -1,5 +1,5 @@
-import 'package:command/command.dart';
-import 'package:command/logger.dart';
+import 'package:colorful_cmd/command.dart';
+import 'package:colorful_cmd/logger.dart';
 
 class FooCommand extends ICmd {
   @override
