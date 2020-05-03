@@ -5,6 +5,13 @@ A library for building a beautiful command line application in dart.
 * console
 * args
 
+## Preview
+
+* ubuntu 
+![ubuntu](./example/ubuntu.png)
+* windows
+![windows](./example/windows.png)
+
 ## Usage
 
 A simple usage example:
