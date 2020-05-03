@@ -49,7 +49,7 @@ class ConsoleKernel<T> extends CommandRunner<T>{
       .gold(_wrap(usagePrefix))
       .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
       .gold('Global options: \n')
-      .white('  ${argParser.usage}\n\n')
+      .green('  ${argParser.usage}\n\n')
       .text('${_getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
 
     if (usageFooter != null) {
@@ -62,8 +62,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
 
   void addGroupCommands() {
     groupsCommands.forEach((command) {
-      if (command.name == null) throw VariableIsNull('${command.runtimeType}\'s name');
-      if (command.description == null) throw VariableIsNull('${command.runtimeType}\'s description');
+      if (command.name == null) throw VariableIsNullException('${command.runtimeType}\'s name');
+      if (command.description == null) throw VariableIsNullException('${command.runtimeType}\'s description');
       addCommand(command);
     });
   }
@@ -80,12 +80,10 @@ class ConsoleKernel<T> extends CommandRunner<T>{
   @override
   Future<T> run(Iterable<String> args) async {
     try {
-      
       addGroupCommands();
       return await super.run(args);
-
     } on UsageException catch(e) {
-      _logger.error('\n\n$e');  
+      printError('\n$e');
     } catch(e, s) {
       _logger.error(e).trace('Call stack: \n$s');
     } finally {
@@ -139,8 +137,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     var groupCmdMaps = <String, String>{};
     var cmdsNotInGroup = <String>[];
     names.forEach((name) {
-      if (name == null) throw VariableIsNull('${commands[name].runtimeType}\'s name');
-      if (commands[name].description == null) throw VariableIsNull('${commands[name].runtimeType}\'s description');
+      if (name == null) throw VariableIsNullException('${commands[name].runtimeType}\'s name');
+      if (commands[name].description == null) throw VariableIsNullException('${commands[name].runtimeType}\'s description');
       var index = name.indexOf(':');
       if (index >= 0) {
         groupCmdMaps[name] = name.substring(0, index);

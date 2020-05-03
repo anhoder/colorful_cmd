@@ -13,11 +13,11 @@ abstract class IGroup<T> {
     }
 
     if (name == null) {
-      throw VariableIsNull('${runtimeType}\'s name');
+      throw VariableIsNullException('${runtimeType}\'s name');
     }
     
     res.forEach((command){
-      if (command.name == null) throw VariableIsNull('Cmd(${command.runtimeType})\'s name');
+      if (command.name == null) throw VariableIsNullException('Cmd(${command.runtimeType})\'s name');
       command.name = '${name ?? ''}:${command.name ?? ''}';
     });
 

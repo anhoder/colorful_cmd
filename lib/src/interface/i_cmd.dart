@@ -11,72 +11,122 @@ abstract class ICmd<T> extends Command<T> {
   List<Flag> get flags;
   List<Option> get options;
 
+  final Map<String, String> _shortNameMap;
+  final List<String> _optionNames;
 
   // TODO: extend group's log handler
   List<ILogHandler> get logHandlers;
   
-  ICmd() {
+  ICmd(): _shortNameMap = {}, _optionNames = [] {
     try {
       logger = Logger(logHandlers: logHandlers);
-      if (flags != null && flags.isNotEmpty) {
-        flags.forEach((flag) {
-          argParser.addFlag(
-            flag.name, 
-            abbr: flag.abbr, 
-            help: flag.help,
-            defaultsTo: flag.defaultsTo,
-            negatable: flag.negatable,
-            callback: flag.callback,
-            hide: flag.hide
-          );
-        });
-      }
-      if (options != null && options.isNotEmpty) {
-        options.forEach((option) {
-          if (option.type == OptionType.single) {
-            argParser.addOption(
-              option.name,
-              abbr: option.abbr,
-              help: option.help,
-              valueHelp: option.valueHelp,
-              defaultsTo: option.defaultsTo,
-              allowed: option.allowed,
-              allowedHelp: option.allowedHelp,
-              callback: option.callback,
-              hide: option.hide
-            );
-          } else {
-            argParser.addMultiOption(
-              option.name,
-              abbr: option.abbr,
-              help: option.help,
-              valueHelp: option.valueHelp,
-              defaultsTo: option.mutilDefaultsTo,
-              allowed: option.allowed,
-              allowedHelp: option.allowedHelp,
-              callback: option.mutilCallback,
-              hide: option.hide
-            );
-          }
-        });
-      }
+
+      /// validate name and description
+      if (name == null || name == '') throw VariableIsNullException('(${runtimeType})\'s name');
+      description ??= '';
+
+
+      _addFlags();
+      
+      _addOptions();
+      
     } catch(e, s) {
       logger.error(e).trace(s);
       exit(0);
     }
   }
 
+  /// add flags
+  void _addFlags() {
+    if (flags != null && flags.isNotEmpty) {
+      flags.forEach((flag) {
+        if (_optionNames.contains(flag.name)) throw OptionOrFlagRepeatException(flag.name);
+        _optionNames.add(flag.name);
+        if (flag.abbr != null) {
+          if (_optionNames.contains(flag.abbr) && flag.abbr != flag.name) throw OptionOrFlagRepeatException(flag.abbr);
+          _optionNames.add(flag.abbr);
+          _shortNameMap[flag.abbr] = flag.name;
+        }
+        argParser.addFlag(
+          flag.name, 
+          abbr: flag.abbr, 
+          help: flag.help,
+          defaultsTo: flag.defaultsTo,
+          negatable: flag.negatable,
+          callback: flag.callback,
+          hide: flag.hide
+        );
+      });
+    }
+  }
+
+  /// add options
+  void _addOptions() {
+    if (options != null && options.isNotEmpty) {
+      options.forEach((option) {
+        if (_optionNames.contains(option.name)) throw OptionOrFlagRepeatException(option.name);
+        _optionNames.add(option.name);
+        if (option.abbr != null) {
+          if (_optionNames.contains(option.abbr) && option.abbr != option.name) throw OptionOrFlagRepeatException(option.abbr);
+          _optionNames.add(option.abbr);
+          _shortNameMap[option.abbr] = option.name;
+        }
+        if (option.type == OptionType.single) {
+          argParser.addOption(
+            option.name,
+            abbr: option.abbr,
+            help: option.help,
+            valueHelp: option.valueHelp,
+            defaultsTo: option.defaultsTo,
+            allowed: option.allowed,
+            allowedHelp: option.allowedHelp,
+            callback: option.callback,
+            hide: option.hide
+          );
+        } else {
+          argParser.addMultiOption(
+            option.name,
+            abbr: option.abbr,
+            help: option.help,
+            valueHelp: option.valueHelp,
+            defaultsTo: option.mutilDefaultsTo,
+            allowed: option.allowed,
+            allowedHelp: option.allowedHelp,
+            callback: option.mutilCallback,
+            hide: option.hide
+          );
+        }
+      });
+    }
+  }
+
+  /// get option or flag by name
+  dynamic getInput(String name) {
+    if (argResults.options.contains(name)) {
+      return argResults[name];
+    } else if (_shortNameMap.containsKey(name) && argResults.options.contains(_shortNameMap[name])) {
+      return argResults[_shortNameMap[name]];
+    }
+    return null;
+  }
+
+  /// get all option and flags
+  Map<String, dynamic> getInputs() {
+    var inputs = <String, dynamic>{};
+    _optionNames.forEach((name) => inputs[name] = getInput(name));
+    return inputs;
+  }
 
   /// print info
-  void info(Object text, [Color color = Color.CYAN]) => ColorText().setColor(color).text(text.toString()).normal().print();
+  void info(Object text, [Color color = Color.CYAN]) => printInfo(text, color);
 
-  void debug(Object text) => info(text, Color.GREEN);
+  void debug(Object text) => printDebug(text);
 
-  void warning(Object text) => info(text, Color.YELLOW);
+  void warning(Object text) => printWarning(text);
 
-  void trace(Object text) => info(text, Color.MAGENTA);
+  void trace(Object text) => printTrace(text);
 
-  void error(Object text) => info(text, Color.RED);
+  void error(Object text) => printError(text);
 
   @override
   ConsoleKernel<T> get runner => super.runner as ConsoleKernel;
@@ -152,8 +202,8 @@ abstract class ICmd<T> extends Command<T> {
     var groupCmdMaps = <String, String>{};
     var cmdsNotInGroup = <String>[];
     names.forEach((name) {
-      if (name == null) throw VariableIsNull('${commands[name].runtimeType}\'s name');
-      if (commands[name].description == null) throw VariableIsNull('${commands[name].runtimeType}\'s description');
+      if (name == null) throw VariableIsNullException('${commands[name].runtimeType}\'s name');
+      if (commands[name].description == null) throw VariableIsNullException('${commands[name].runtimeType}\'s description');
       var index = name.indexOf(':');
       if (index >= 0) {
         groupCmdMaps[name] = name.substring(0, index);

@@ -8,7 +8,6 @@ class Flag {
   final bool negatable; // --debug --no-debug
   final void Function(bool) callback;
   final bool hide;
-  bool value;
 
   Flag(this.name, {
     this.abbr,

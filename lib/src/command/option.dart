@@ -17,8 +17,6 @@ class Option {
 
   final OptionType type;
 
-  bool value;
-
   Option(this.name, {
     this.abbr,
     this.help,

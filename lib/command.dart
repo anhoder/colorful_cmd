@@ -16,5 +16,4 @@ part 'src/interface/i_output.dart';
 part 'src/interface/i_cmd.dart';
 part 'src/command/flag.dart';
 part 'src/command/option.dart';
-part 'src/input/input.dart';
 part 'src/kernel/console_kernel.dart';

@@ -66,7 +66,7 @@ class ColorText extends TextPen {
     if (_method_mapping.containsKey(method)) {
       var callback = _method_mapping[method];
       if (text == null) {
-        return callback();
+        return callback().normal();
       } else {
         return callback().text(text).normal();
       }
