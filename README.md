@@ -1,59 +1,85 @@
-A library for Dart developers.
+A library for building a beautiful command line application in dart.
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+## Dependency
+
+* console
+* args
 
 ## Usage
 
 A simple usage example:
 
 ```dart
-import 'package:dart_command/dart_command.dart';
+import 'package:command/command.dart';
+import 'package:command/logger.dart';
 
-main() {
-  var awesome = new Awesome();
+void main(List<String> args) {
+  var kernel = ConsoleKernel();
+  kernel.addCommands([RootCommand()])
+        .run(args);
+}
+
+class RootCommand extends ICmd {
+
+  @override
+  String name = 'root';
+
+  @override
+  String description = 'root command, without group';
+
+  @override
+  List<Flag> get flags => null;
+
+  @override
+  List<ILogHandler> get logHandlers => null;
+
+  @override
+  List<Option> get options => null;
+  
+  @override
+  void run() {
+    warning(description);
+    var colorText = ColorText();
+    colorText
+      ..gold('\n\n\ngold\n')
+      ..green('green\n')
+      ..blue('blue\n')
+      ..cyan('cyan\n')
+      ..darkBlue('darkBlue\n')
+      ..darkRed('darkRed\n')
+      ..gray('gray\n')
+      ..lightCyan('lightCyan\n')
+      ..lightGray('lightGray\n')
+      ..lightMagenta('lightMagenta\n')
+      ..lime('lime\n')
+      ..magenta('magenta\n')
+      ..red('red\n')
+      ..white('white\n')
+      ..black('black\n')
+      ..yellow('yellow\n')
+      ..print();
+  }
 }
 ```
 
-## Features and bugs
-
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: http://example.com/issues/replaceme
+Other: 
 
 ```dart
-
-// TextPen 文本输出
-// StdioConsoleAdapter 默认Console
-// BufferConsoleAdapter Buffer Console
-// Console 
-// CursorPosition cursor位置
-// ConsoleCanvas canvas
-// PixelSpec 像素点
-// getClipboard() 获取剪切板
-// Color 颜色
-// Cursor 光标
-// DrawingCanvas 绘制canvas
-// format() 字符串格式化函数
-// Icon 图标
-// inheritIO() 获取进程输出、错误
-// KeyCode 常用键盘码
-// Keyboard 键盘类
-// ProgressBar 进度条
-// LoadingBar 加载
-// WideLoadingBar 横条加载中
-// Prompter 输入
-// readInput() 读取输入
-// ShellPrompt
-// Chooser 选择器
-// Timer 显示消耗的时间
-// createTree() 创建树
-// printTree() 输出树
-// getColorLookupTable() 获取颜色表
-// Window 窗口应用（虚类，需要继承）
-// bresenham() bresenham算法 用于画圆
+  Color // color, enum type
+  ColorText // colorful text
+  Icon 
+  KeyCode 
+  Keyboard 
+  ProgressBar 
+  LoadingBar 
+  WideLoadingBar 
+  Prompter 
+  readInput() 
+  ShellPrompt
+  Chooser 
+  Timer 
+  createTree() 
+  printTree() 
+  Window 
+  // ...
 ```
-
-
-
-> LoggerHandler将group的日志处理器继承下来
