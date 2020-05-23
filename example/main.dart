@@ -4,9 +4,7 @@ import 'test_group.dart';
 
 void main(List<String> args) {
   var kernel = ConsoleKernel();
-  kernel.addCommands([RootCommand()])
-        .addGroup(TestGroup())
-        .run(args);
+  kernel.addCommands([RootCommand()]).addGroup(TestGroup()).run(args);
 
   // var colorText = ColorText();
   // colorText

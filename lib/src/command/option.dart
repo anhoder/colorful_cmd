@@ -17,25 +17,31 @@ class Option {
 
   final OptionType type;
 
-  Option(this.name, {
-    this.abbr,
-    this.help,
-    this.valueHelp,
-    this.allowed,
-    this.allowedHelp,
-    this.defaultsTo,
-    this.callback,
-    this.hide = false
-  }): mutilDefaultsTo = null, mutilCallback = null, splitCommas = false, type = OptionType.single;
+  Option(this.name,
+      {this.abbr,
+      this.help,
+      this.valueHelp,
+      this.allowed,
+      this.allowedHelp,
+      this.defaultsTo,
+      this.callback,
+      this.hide = false})
+      : mutilDefaultsTo = null,
+        mutilCallback = null,
+        splitCommas = false,
+        type = OptionType.single;
 
-  Option.mutil(this.name, {
-    this.abbr,
-    this.help,
-    this.valueHelp,
-    this.allowed,
-    this.allowedHelp,
-    this.mutilDefaultsTo,
-    this.mutilCallback,
-    this.hide = false
-  }): defaultsTo = null, callback = null, splitCommas = true, type = OptionType.multiple;
+  Option.mutil(this.name,
+      {this.abbr,
+      this.help,
+      this.valueHelp,
+      this.allowed,
+      this.allowedHelp,
+      this.mutilDefaultsTo,
+      this.mutilCallback,
+      this.hide = false})
+      : defaultsTo = null,
+        callback = null,
+        splitCommas = true,
+        type = OptionType.multiple;
 }

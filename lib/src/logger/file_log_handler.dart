@@ -1,13 +1,12 @@
 part of logger;
 
 class FileLogHandler extends ILogHandler {
-
   @override
   bool get colorful => false;
 
   File file;
 
-  /// options: 
+  /// options:
   /// %Y: year
   /// %m: month
   /// %d: day
@@ -27,16 +26,16 @@ class FileLogHandler extends ILogHandler {
     }
     file.writeAsStringSync('$log\n', mode: FileMode.append, flush: true);
   }
-  
+
   /// set log file by now datetime
   void setLogFile() {
     fileName ??= '%Y-%m-%d.log';
     fileName = format_by_now_time(fileName);
     var index = fileName.indexOf('/');
-    if ( index == 0) {
+    if (index == 0) {
       fileName = fileName.substring(1, fileName.length);
     }
-    
+
     dirPath ??= './log/%Y-%m';
     dirPath = format_by_now_time(dirPath);
     index = dirPath.lastIndexOf('/');

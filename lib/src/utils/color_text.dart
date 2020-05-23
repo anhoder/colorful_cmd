@@ -1,10 +1,9 @@
 part of utils;
 
 class ColorText extends TextPen {
-
   Map<String, Function> _method_mapping;
 
-  ColorText(): super() {
+  ColorText() : super() {
     _method_mapping = {
       'gold': super.gold,
       'green': super.green,
@@ -61,7 +60,6 @@ class ColorText extends TextPen {
   @override
   ColorText text(String text) => super.text(text);
 
-
   ColorText callMethod(String method, [String text]) {
     if (_method_mapping.containsKey(method)) {
       var callback = _method_mapping[method];
@@ -74,5 +72,4 @@ class ColorText extends TextPen {
 
     return this;
   }
-
 }

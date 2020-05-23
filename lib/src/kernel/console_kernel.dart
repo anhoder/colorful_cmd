@@ -1,21 +1,23 @@
 part of command;
 
-class ConsoleKernel<T> extends CommandRunner<T>{
+class ConsoleKernel<T> extends CommandRunner<T> {
   bool showTitle;
   Color titleColor;
   Logger _logger;
   List<IGroup<T>> _groups = [];
 
-  ConsoleKernel({name = 'Command', 
-    description = 'A library for building a beautiful command line application in dart.', 
-    List<ILogHandler> logHandlers,
-    this.showTitle = true,
-    this.titleColor}): super(name, description) {
+  ConsoleKernel(
+      {name = 'Command',
+      description =
+          'A library for building a beautiful command line application in dart.',
+      List<ILogHandler> logHandlers,
+      this.showTitle = true,
+      this.titleColor})
+      : super(name, description) {
     logHandlers ??= [StdLogHandler(), FileLogHandler()];
     _logger = Logger(logHandlers: logHandlers);
     titleColor ??= randomColor();
   }
-
 
   ConsoleKernel<T> setGroups(List<IGroup<T>> groups) {
     _groups = groups;
@@ -37,20 +39,20 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     return this;
   }
 
-
   @override
-  String get usage => '${_getTitle()}${_getDescription()}\n\n${_usageWithoutTitleAndDescription}';
-
+  String get usage =>
+      '${_getTitle()}${_getDescription()}\n\n${_usageWithoutTitleAndDescription}';
 
   /// uasge without title and description
   String get _usageWithoutTitleAndDescription {
     var usagePrefix = 'Usage: \n';
     var pen = ColorText()
-      .gold(_wrap(usagePrefix))
-      .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
-      .gold('Global options: \n')
-      .green('  ${argParser.usage}\n\n')
-      .text('${_getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
+        .gold(_wrap(usagePrefix))
+        .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
+        .gold('Global options: \n')
+        .green('  ${argParser.usage}\n\n')
+        .text(
+            '${_getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
 
     if (usageFooter != null) {
       pen.cyan('\n${_wrap(usageFooter)}\n\n');
@@ -59,15 +61,15 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     return pen.toString();
   }
 
-
   void addGroupCommands() {
     groupsCommands.forEach((command) {
-      if (command.name == null) throw VariableIsNullException('${command.runtimeType}\'s name');
-      if (command.description == null) throw VariableIsNullException('${command.runtimeType}\'s description');
+      if (command.name == null)
+        throw VariableIsNullException('${command.runtimeType}\'s name');
+      if (command.description == null)
+        throw VariableIsNullException('${command.runtimeType}\'s description');
       addCommand(command);
     });
   }
-
 
   /// get all commands that belongs to group
   List<ICmd<T>> get groupsCommands {
@@ -76,15 +78,14 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     return commands;
   }
 
-
   @override
   Future<T> run(Iterable<String> args) async {
     try {
       addGroupCommands();
       return await super.run(args);
-    } on UsageException catch(e) {
+    } on UsageException catch (e) {
       printError('\n$e');
-    } catch(e, s) {
+    } catch (e, s) {
       _logger.error(e).trace('Call stack: \n$s');
     } finally {
       exit(0);
@@ -92,20 +93,19 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     return null;
   }
 
-
   /// throw usage exception
   @override
   void usageException(String message) =>
       throw UsageException(message, _usageWithoutTitleAndDescription);
 
-
   /// get title.
   String _getTitle() {
     if (showTitle) {
-      return TextPen().setColor(titleColor)
-        .text('${formatChars(executableName)}\n')
-        .normal()
-        .toString();
+      return TextPen()
+          .setColor(titleColor)
+          .text('${formatChars(executableName)}\n')
+          .normal()
+          .toString();
     }
     return '';
   }
@@ -115,11 +115,9 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     return ColorText().cyan(description).toString();
   }
 
-
   String _wrap(String text, {int hangingIndent}) => wrapText(text,
       length: argParser.usageLineLength, hangingIndent: hangingIndent);
 
-  
   /// get commands usage.
   String _getCommandUsage(Map<String, Command> commands,
       {bool isSubcommand = false, int lineLength}) {
@@ -137,8 +135,11 @@ class ConsoleKernel<T> extends CommandRunner<T>{
     var groupCmdMaps = <String, String>{};
     var cmdsNotInGroup = <String>[];
     names.forEach((name) {
-      if (name == null) throw VariableIsNullException('${commands[name].runtimeType}\'s name');
-      if (commands[name].description == null) throw VariableIsNullException('${commands[name].runtimeType}\'s description');
+      if (name == null)
+        throw VariableIsNullException('${commands[name].runtimeType}\'s name');
+      if (commands[name].description == null)
+        throw VariableIsNullException(
+            '${commands[name].runtimeType}\'s description');
       var index = name.indexOf(':');
       if (index >= 0) {
         groupCmdMaps[name] = name.substring(0, index);
@@ -151,7 +152,8 @@ class ConsoleKernel<T> extends CommandRunner<T>{
       return name.length;
     }).reduce(max);
 
-    var buffer = StringBuffer(ColorText().yellow('Available ${isSubcommand ? "sub" : ""}commands:'));
+    var buffer = StringBuffer(
+        ColorText().yellow('Available ${isSubcommand ? "sub" : ""}commands:'));
     var columnStart = length + 5;
 
     /// display commands that not in groups
@@ -159,8 +161,10 @@ class ConsoleKernel<T> extends CommandRunner<T>{
       var lines = wrapTextAsLines(commands[name].summary,
           start: columnStart, length: lineLength);
       buffer.writeln();
-      
-      buffer.write(ColorText().green('  ${padRight(name, length)}   ').white(lines.first));
+
+      buffer.write(ColorText()
+          .green('  ${padRight(name, length)}   ')
+          .white(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();
@@ -168,7 +172,6 @@ class ConsoleKernel<T> extends CommandRunner<T>{
         buffer.write(line);
       }
     }
-
 
     /// display group commands
     var lastGroup = '';
@@ -178,13 +181,15 @@ class ConsoleKernel<T> extends CommandRunner<T>{
       }
       var lines = wrapTextAsLines(commands[name].summary,
           start: columnStart, length: lineLength);
-      
+
       buffer.writeln();
       if (lastGroup != groupCmdMaps[name]) {
         buffer.writeln(ColorText().yellow(' ${groupCmdMaps[name]}'));
         lastGroup = groupCmdMaps[name];
       }
-      buffer.write(ColorText().green('  ${padRight(name, length)}   ').white(lines.first));
+      buffer.write(ColorText()
+          .green('  ${padRight(name, length)}   ')
+          .white(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();

@@ -9,12 +9,11 @@ class Flag {
   final void Function(bool) callback;
   final bool hide;
 
-  Flag(this.name, {
-    this.abbr,
-    this.help,
-    this.defaultsTo = false,
-    this.negatable = true,
-    this.callback,
-    this.hide = false}
-  );
+  Flag(this.name,
+      {this.abbr,
+      this.help,
+      this.defaultsTo = false,
+      this.negatable = true,
+      this.callback,
+      this.hide = false});
 }

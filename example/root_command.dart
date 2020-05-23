@@ -1,9 +1,7 @@
-
 import 'package:colorful_cmd/command.dart';
 import 'package:colorful_cmd/logger.dart';
 
 class RootCommand extends ICmd {
-
   @override
   String name = 'root';
 
@@ -18,7 +16,7 @@ class RootCommand extends ICmd {
 
   @override
   List<Option> get options => null;
-  
+
   @override
   void run() {
     warning(description);

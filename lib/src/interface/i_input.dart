@@ -1,5 +1,3 @@
 part of command;
 
-abstract class IInput {
-  
-}
+abstract class IInput {}
