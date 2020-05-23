@@ -1,7 +1,6 @@
 part of logger;
 
 class StdLogHandler extends ILogHandler {
-  
   @override
   bool get colorful => true;
 

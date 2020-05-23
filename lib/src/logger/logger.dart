@@ -1,14 +1,8 @@
 part of logger;
 
-enum LogLevel {
-  info,
-  debug,
-  warning,
-  trace,
-  error
-}
+enum LogLevel { info, debug, warning, trace, error }
 
-const Map<LogLevel,String> LOG_LEVEL_STRING = {
+const Map<LogLevel, String> LOG_LEVEL_STRING = {
   LogLevel.info: 'INFO',
   LogLevel.debug: 'DEBUG',
   LogLevel.warning: 'WARNING',
@@ -53,9 +47,10 @@ class Logger {
     if (!LOG_LEVEL_STRING.containsKey(level)) {
       throw LogLevelNotFoundException(level.toString());
     }
-    var log = format.replaceAll('DATE', DateTime.now().toString())
-      .replaceAll('LEVEL', LOG_LEVEL_STRING[level])
-      .replaceAll('LOG', content.toString());
+    var log = format
+        .replaceAll('DATE', DateTime.now().toString())
+        .replaceAll('LEVEL', LOG_LEVEL_STRING[level])
+        .replaceAll('LOG', content.toString());
     handle(level, log);
     return this;
   }
@@ -69,35 +64,35 @@ class Logger {
           var logContent = colorful ? ColorText().cyan(log).toString() : log;
           logHandler.handleInfo(logContent);
         });
-        return ;
+        return;
       case LogLevel.debug:
         logHandlers.forEach((logHandler) {
           var colorful = logHandler.colorful ?? false;
           var logContent = colorful ? ColorText().green(log).toString() : log;
           logHandler.handleDebug(logContent);
         });
-        return ;
+        return;
       case LogLevel.warning:
         logHandlers.forEach((logHandler) {
           var colorful = logHandler.colorful ?? false;
           var logContent = colorful ? ColorText().yellow(log).toString() : log;
           logHandler.handleWarning(logContent);
         });
-        return ;
+        return;
       case LogLevel.trace:
         logHandlers.forEach((logHandler) {
           var colorful = logHandler.colorful ?? false;
           var logContent = colorful ? ColorText().magenta(log).toString() : log;
           logHandler.handleTrace(logContent);
         });
-        return ;
+        return;
       case LogLevel.error:
         logHandlers.forEach((logHandler) {
           var colorful = logHandler.colorful ?? false;
           var logContent = colorful ? ColorText().red(log).toString() : log;
           logHandler.handleError(logContent);
         });
-        return ;
+        return;
       default:
         logHandlers.forEach((logHandler) => logHandler.handle(log));
         return;

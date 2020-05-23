@@ -1,7 +1,6 @@
 part of logger;
 
 abstract class ILogHandler {
-  
   /// log is colorful?
   bool get colorful;
 

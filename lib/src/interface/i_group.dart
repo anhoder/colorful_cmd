@@ -15,9 +15,10 @@ abstract class IGroup<T> {
     if (name == null) {
       throw VariableIsNullException('${runtimeType}\'s name');
     }
-    
-    res.forEach((command){
-      if (command.name == null) throw VariableIsNullException('Cmd(${command.runtimeType})\'s name');
+
+    res.forEach((command) {
+      if (command.name == null)
+        throw VariableIsNullException('Cmd(${command.runtimeType})\'s name');
       command.name = '${name ?? ''}:${command.name ?? ''}';
     });
 

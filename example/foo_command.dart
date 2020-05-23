@@ -9,7 +9,7 @@ class FooCommand extends ICmd {
 
   @override
   List<ILogHandler> get logHandlers => [StdLogHandler(), FileLogHandler()];
-  
+
   @override
   void run() {
     info('input debug: ' + getInput('d').toString());
@@ -20,13 +20,16 @@ class FooCommand extends ICmd {
 
   @override
   List<Flag> get flags => [
-    Flag('debug', abbr: 'd', defaultsTo: false, negatable: true, help: 'run in debug mode'),
-    Flag('flag', abbr: 'f', defaultsTo: false, negatable: true, help: 'test flag')
-  ];
+        Flag('debug',
+            abbr: 'd',
+            defaultsTo: false,
+            negatable: true,
+            help: 'run in debug mode'),
+        Flag('flag',
+            abbr: 'f', defaultsTo: false, negatable: true, help: 'test flag')
+      ];
 
   @override
-  List<Option> get options => [
-    Option('option', abbr: 'o', help: 'test option')
-  ];
-
+  List<Option> get options =>
+      [Option('option', abbr: 'o', help: 'test option')];
 }

@@ -1,9 +1,7 @@
-
 import 'package:colorful_cmd/command.dart';
 import 'package:colorful_cmd/logger.dart';
 
 class BarCommand extends ICmd {
-
   @override
   String name = 'bar';
   @override
@@ -11,7 +9,7 @@ class BarCommand extends ICmd {
 
   @override
   List<ILogHandler> get logHandlers => [FileLogHandler()];
-  
+
   @override
   void run() {
     info('$name: $description');
