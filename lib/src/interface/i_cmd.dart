@@ -222,7 +222,7 @@ abstract class ICmd<T> extends Command<T> {
     }).reduce(max);
 
     var buffer = StringBuffer(
-        ColorText().yellow('Available ${isSubcommand ? "sub" : ""}commands:'));
+        ColorText().gold('Available ${isSubcommand ? "sub" : ""}commands:'));
     var columnStart = length + 5;
 
     /// display commands that not in groups

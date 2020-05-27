@@ -1,75 +1,122 @@
 part of utils;
 
-class ColorText extends TextPen {
-  Map<String, Function> _method_mapping;
+class ColorText {
+  Color _currentTextColor;
+  Color _currentBgColor;
+  final StringBuffer _buffer = StringBuffer();
 
-  ColorText() : super() {
-    _method_mapping = {
-      'gold': super.gold,
-      'green': super.green,
-      'blue': super.blue,
-      'cyan': super.cyan,
-      'darkBlue': super.darkBlue,
-      'darkRed': super.darkRed,
-      'gray': super.gray,
-      'lightCyan': super.lightCyan,
-      'lightGray': super.lightGray,
-      'lightMagenta': super.lightMagenta,
-      'lime': super.lime,
-      'magenta': super.magenta,
-      'red': super.red,
-      'white': super.white,
-      'black': super.black,
-      'yellow': super.yellow
-    };
-  }
-
-  @override
-  ColorText gold([String text]) => callMethod('gold', text);
-  @override
-  ColorText green([String text]) => callMethod('green', text);
-  @override
-  ColorText blue([String text]) => callMethod('blue', text);
-  @override
-  ColorText cyan([String text]) => callMethod('cyan', text);
-  @override
-  ColorText darkBlue([String text]) => callMethod('darkBlue', text);
-  @override
-  ColorText darkRed([String text]) => callMethod('darkRed', text);
-  @override
-  ColorText gray([String text]) => callMethod('gray', text);
-  @override
-  ColorText lightCyan([String text]) => callMethod('lightCyan', text);
-  @override
-  ColorText lightGray([String text]) => callMethod('lightGray', text);
-  @override
-  ColorText lightMagenta([String text]) => callMethod('lightMagenta', text);
-  @override
-  ColorText lime([String text]) => callMethod('lime', text);
-  @override
-  ColorText magenta([String text]) => callMethod('magenta', text);
-  @override
-  ColorText red([String text]) => callMethod('red', text);
-  @override
-  ColorText white([String text]) => callMethod('white', text);
-  @override
-  ColorText black([String text]) => callMethod('black', text);
-  @override
-  ColorText yellow([String text]) => callMethod('yellow', text);
-
-  @override
-  ColorText text(String text) => super.text(text);
-
-  ColorText callMethod(String method, [String text]) {
-    if (_method_mapping.containsKey(method)) {
-      var callback = _method_mapping[method];
-      if (text == null) {
-        return callback().normal();
+  ColorText setTextColor(int id, {bool xterm = false, bool bright = false}) {
+    Color color;
+    if (xterm) {
+      var c = id.clamp(0, 256);
+      color = Color(c, xterm: true);
+      sgr(38, [5, c]);
+    } else {
+      color = Color(id, bright: true);
+      if (bright) {
+        sgr(30 + id, [1]);
       } else {
-        return callback().text(text).normal();
+        sgr(30 + id);
       }
     }
-
+    _currentTextColor = color;
     return this;
   }
+
+  Color getTextColor() => _currentTextColor;
+
+  ColorText setBackgroundColor(int id, {bool xterm = false, bool bright = false}) {
+    Color color;
+    if (xterm) {
+      var c = id.clamp(0, 256);
+      color = Color(c, xterm: true);
+      sgr(48, [5, c]);
+    } else {
+      color = Color(id, bright: true);
+      if (bright) {
+        sgr(40 + id, [1]);
+      } else {
+        sgr(40 + id);
+      }
+    }
+    _currentBgColor = color;
+    return this;
+  }
+
+  Color getBackgroundColor() => _currentBgColor;
+
+  void sgr(int id, [List<int> params]) {
+    String stuff;
+    if (params != null) {
+      stuff = "${id};${params.join(";")}";
+    } else {
+      stuff = id.toString();
+    }
+    ansi('${stuff}m');
+  }
+
+  void ansi(String after) => _buffer.write('${Console.ANSI_ESCAPE}${after}');
+
+  ColorText reset() {
+    sgr(0);
+    _currentTextColor = null;
+    _currentBgColor = null;
+    return this;
+  }
+
+  @override
+  String toString() => _buffer.toString();
+
+  ColorText setColor(Color color) {
+    setTextColor(color.id, xterm: color.xterm, bright: color.bright);
+    return this;
+  }
+
+  ColorText text(String str) {
+    _buffer.write(str);
+    return this;
+  }
+
+  ColorText normal() => reset();
+
+  ColorText paintingText(String str, Color color) {
+    setColor(color);
+    text(str);
+    reset();
+    return this;
+  }
+
+  ColorText black(str) => paintingText(str, Color.BLACK);
+
+  ColorText blue(str) => paintingText(str, Color.BLUE);
+
+  ColorText cyan(str) => paintingText(str, Color.CYAN);
+
+  ColorText darkBlue(str) => paintingText(str, Color.DARK_BLUE);
+
+  ColorText darkRed(str) => paintingText(str, Color.DARK_RED);
+
+  ColorText gold(str) => paintingText(str, Color.GOLD);
+
+  ColorText gray(str) => paintingText(str, Color.GRAY);
+
+  ColorText green(str) => paintingText(str, Color.GREEN);
+
+  ColorText lightCyan(str) => paintingText(str, Color.LIGHT_CYAN);
+
+  ColorText lightGray(str) => paintingText(str, Color.LIGHT_GRAY);
+  
+  ColorText lightMagenta(str) => paintingText(str, Color.LIGHT_MAGENTA);
+  
+  ColorText lime(str) => paintingText(str, Color.LIME);
+  
+  ColorText magenta(str) => paintingText(str, Color.MAGENTA);
+  
+  ColorText red(str) => paintingText(str, Color.RED);
+
+  ColorText white(str) => paintingText(str, Color.WHITE);
+  
+  ColorText yellow(str) => paintingText(str, Color.YELLOW);
+
+  void print() => stdout.write(_buffer);
 }
