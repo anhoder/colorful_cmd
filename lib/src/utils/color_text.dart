@@ -25,7 +25,8 @@ class ColorText {
 
   Color getTextColor() => _currentTextColor;
 
-  ColorText setBackgroundColor(int id, {bool xterm = false, bool bright = false}) {
+  ColorText setBackgroundColor(int id,
+      {bool xterm = false, bool bright = false}) {
     Color color;
     if (xterm) {
       var c = id.clamp(0, 256);
@@ -105,17 +106,17 @@ class ColorText {
   ColorText lightCyan(str) => paintingText(str, Color.LIGHT_CYAN);
 
   ColorText lightGray(str) => paintingText(str, Color.LIGHT_GRAY);
-  
+
   ColorText lightMagenta(str) => paintingText(str, Color.LIGHT_MAGENTA);
-  
+
   ColorText lime(str) => paintingText(str, Color.LIME);
-  
+
   ColorText magenta(str) => paintingText(str, Color.MAGENTA);
-  
+
   ColorText red(str) => paintingText(str, Color.RED);
 
   ColorText white(str) => paintingText(str, Color.WHITE);
-  
+
   ColorText yellow(str) => paintingText(str, Color.YELLOW);
 
   void print() => stdout.write(_buffer);
