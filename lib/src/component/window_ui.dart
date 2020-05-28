@@ -9,6 +9,7 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   Map<String, String> lang;
   List<String> menu;
+  int menuPageSize;
   List<String> Function(WindowUI) beforeEnterMenu;
 
   String _menuTitle;
@@ -22,14 +23,15 @@ class WindowUI extends BaseWindow {
   WindowUI(
       {this.showTitle = true,
       this.showWelcome = true,
-      this.welcomeMsg = 'musicfox',
+      this.welcomeMsg = 'win-ui',
       dynamic primaryColor = 'random',
       this.welcomeDuration = 2000,
-      this.name = 'MUSICFOX',
+      this.name = 'WIN_UI',
       this.menu,
-      this.lang = ZH,
-      defaultMenuTitle = '------',
-      this.beforeEnterMenu})
+      this.lang,
+      defaultMenuTitle = 'Main Menu',
+      this.beforeEnterMenu,
+      this.menuPageSize = 10})
       : super(' ${name} ') {
     if ((!(primaryColor is String) || primaryColor != 'random') &&
         !(primaryColor is Color)) {
@@ -44,9 +46,9 @@ class WindowUI extends BaseWindow {
     if (defaultMenuTitle != null) _menuTitle = defaultMenuTitle;
 
     if (menu == null) {
-      menu = ['help'];
+      menu = ['Help'];
     } else {
-      menu.add('help');
+      menu.add('Help');
     }
     menu = toLocal(menu, lang);
   }
@@ -94,14 +96,21 @@ class WindowUI extends BaseWindow {
   }
 
   void enterMenu() {
-    if (_selectIndex > menu.length) return;
+    if (_selectIndex >= menu.length) return;
     _menuStack.add(_MenuItem(menu, _selectIndex, _menuTitle));
     _earseMenu();
     _menuTitle = menu[_selectIndex];
+    
+    if (_menuStack.length == 1 && _selectIndex == menu.length - 1) {
+      menu = [];
+      Console.moveCursor(row: _startRow, column: _startColumn);
+      // Console.write('123');
+      // TODO Help document
+    } else {
+      menu = beforeEnterMenu == null ? [] : (beforeEnterMenu(this) ?? []);
+    }
+
     _selectIndex = 0;
-
-    menu = beforeEnterMenu == null ? [] : (beforeEnterMenu(this) ?? []);
-
     _displayList();
   }
 
@@ -113,6 +122,7 @@ class WindowUI extends BaseWindow {
     menu = menuItem.list;
     _selectIndex = menuItem.index;
     _menuTitle = menuItem.menuTitle;
+    _earseMenu();
     _displayList();
   }
 

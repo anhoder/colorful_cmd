@@ -48,7 +48,8 @@ class ConsoleKernel<T> extends CommandRunner<T> {
     var usagePrefix = 'Usage: \n';
     var pen = ColorText()
         .gold(_wrap(usagePrefix))
-        .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
+        .normal()
+        .text('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
         .gold('Global options: \n')
         .green('  ${argParser.usage}\n\n')
         .text(
@@ -168,7 +169,8 @@ class ConsoleKernel<T> extends CommandRunner<T> {
 
       buffer.write(ColorText()
           .green('  ${padRight(name, length)}   ')
-          .white(lines.first));
+          .normal()
+          .text(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();
@@ -193,7 +195,8 @@ class ConsoleKernel<T> extends CommandRunner<T> {
       }
       buffer.write(ColorText()
           .green('  ${padRight(name, length)}   ')
-          .white(lines.first));
+          .normal()
+          .text(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();

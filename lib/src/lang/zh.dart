@@ -1,5 +1,5 @@
 part of lang;
 
 const ZH = <String, String>{
-  'help': '帮助'
+  'Help': '帮助'
 };

@@ -1,24 +1,55 @@
 part of component;
 
+const List<Color> RainbowColors = [
+  Color.RED,
+  Color.DARK_RED,
+  Color.GOLD,
+  Color.YELLOW,
+  Color.LIME,
+  Color.GREEN,
+  Color.LIGHT_CYAN,
+  Color.CYAN,
+  Color.BLUE,
+  Color.DARK_BLUE,
+  Color.LIGHT_MAGENTA,
+  Color.MAGENTA,
+  Color.LIGHT_MAGENTA,
+  Color.DARK_BLUE,
+  Color.BLUE,
+  Color.CYAN,
+  Color.LIGHT_CYAN,
+  Color.GREEN,
+  Color.LIME,
+  Color.YELLOW,
+  Color.GOLD,
+  Color.DARK_RED,
+];
+
 class RainbowProgress {
   final int complete;
-  int current = 0;
-  int width;
-  bool showPercent;
-  String completeChar;
-  String forwardChar;
-  String unfinishChar;
-  String leftDelimiter;
-  String rightDelimiter;
-  bool rainbow;
+  final bool showPercent;
+  final String completeChar;
+  final String forwardChar;
+  final String unfinishChar;
+  final String leftDelimiter;
+  final String rightDelimiter;
+  final bool rainbow;
+  final int startColumn;
+  final int column;
+  final int row;
 
+  int width;
+  int current = 0;
 
   /// Creates a Progress Bar.
   ///
   /// [complete] is the number that is considered 100%.
   RainbowProgress(
     {this.complete = 100, 
-    this.width, 
+    this.width,
+    this.column,
+    this.row,
+    this.startColumn = 1,
     this.completeChar = '=',
     this.forwardChar = '>',
     this.unfinishChar = ' ',
@@ -50,11 +81,18 @@ class RainbowProgress {
     var out = StringBuffer(before);
 
     for (var x = 1; x < count; x++) {
-      var content = ColorText().setColor(Color((x % 6) + 1)).text(completeChar).normal();
+      var content = ColorText()
+        .setColor(RainbowColors[x % RainbowColors.length])
+        .text(completeChar)
+        .normal();
       out.write(content);
     }
 
-    out.write(forwardChar);
+    out.write(ColorText()
+       .setColor(RainbowColors[count % RainbowColors.length])
+       .text(forwardChar)
+       .normal()
+       .toString());
 
     for (var x = count; x < w; x++) {
       out.write(unfinishChar);
@@ -69,6 +107,11 @@ class RainbowProgress {
       out.write(it.substring(0, it.length - 2) + rightDelimiter);
     }
 
-    Console.overwriteLine(out.toString());
+    if (column == null && row == null) {
+      Console.write('\r${out.toString()}');
+    } else {
+      Console.moveCursor(column: column ?? 0, row: row ?? 0);
+      Console.write('\r${out.toString()}');
+    }
   }
 }
