@@ -11,6 +11,8 @@ A library for building a beautiful command line application in dart.
 ![ubuntu](./example/ubuntu.png)
 * windows
 ![windows](./example/windows.png)
+* mac
+![windows](./example/mac.png)
 
 ## Usage
 
