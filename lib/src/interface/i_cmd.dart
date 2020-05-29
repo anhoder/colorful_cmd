@@ -167,7 +167,8 @@ abstract class ICmd<T> extends Command<T> {
 
     var pen = ColorText()
         .gold(usagePrefix)
-        .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
+        .normal()
+        .text('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
         .gold('Options: \n')
         .green(argUsage);
 
@@ -233,7 +234,8 @@ abstract class ICmd<T> extends Command<T> {
 
       buffer.write(ColorText()
           .green('  ${padRight(name, length)}   ')
-          .white(lines.first));
+          .normal()
+          .text(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();
@@ -258,7 +260,8 @@ abstract class ICmd<T> extends Command<T> {
       }
       buffer.write(ColorText()
           .green('  ${padRight(name, length)}   ')
-          .white(lines.first));
+          .normal()
+          .text(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();
