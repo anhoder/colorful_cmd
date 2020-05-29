@@ -63,19 +63,28 @@ class WindowUI extends BaseWindow {
 
     if (showWelcome && !_hasShownWelcome) {
       _displayWelcome(welcomeMsg);
-      Timer.periodic(Duration(milliseconds: 100), (timer) {
-        if (timer.tick >= (welcomeDuration / 100).round()) {
+      var progress = RainbowProgress(
+        completeChar: '#', 
+        forwardChar: '#', 
+        leftDelimiter: ColorText().gray('[').toString(),
+        rightDelimiter: ColorText().gray(']').toString(),
+      );
+      var interval = 20;
+      Timer.periodic(Duration(milliseconds: interval), (timer) {
+        progress.update(((timer.tick / (welcomeDuration / interval).round()) * 100).round());
+
+        if (timer.tick >= (welcomeDuration / interval).round()) {
           _hasShownWelcome = true;
           timer.cancel();
           draw();
         } else {
-          var column = ((Console.columns - 26) / 2).floor();
+          var column = ((Console.columns - 28) / 2).floor();
           Console.write('\r');
           Console.moveToColumn(column);
           Console.setTextColor(Color.GRAY.id,
               bright: Color.GRAY.bright, xterm: Color.GRAY.xterm);
           Console.write(
-              'Enter after ${(welcomeDuration / 1000 - timer.tick * 0.1).toStringAsFixed(1)} seconds...');
+              ' Enter after ${(welcomeDuration / 1000 - timer.tick * (interval / 1000)).toStringAsFixed(1)} seconds... ');
         }
       });
     } else {
