@@ -1,13 +1,13 @@
 A library for building a beautiful command line application in dart.
 
 ## Dependency
----
+
 
 * console
 * args
 
 ## Preview
----
+
 
 ### Diff OS
 
@@ -36,7 +36,7 @@ A library for building a beautiful command line application in dart.
 
 
 ## Usage
----
+
 
 A simple usage example:
 
