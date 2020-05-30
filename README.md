@@ -33,6 +33,7 @@ A library for building a beautiful command line application in dart.
 ### WindowUI
 
 ![WindowUI](./example/preview/window_ui.png)
+![WindowUI2](./example/preview/window_ui2.png)
 
 
 ## Usage

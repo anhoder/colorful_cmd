@@ -40,24 +40,26 @@ class RainbowProgress {
 
   int width;
   int current = 0;
+  int _startColorIndex;
 
   /// Creates a Progress Bar.
   ///
   /// [complete] is the number that is considered 100%.
   RainbowProgress(
-    {this.complete = 100, 
-    this.width,
-    this.column,
-    this.row,
-    this.startColumn = 1,
-    this.completeChar = '=',
-    this.forwardChar = '>',
-    this.unfinishChar = ' ',
-    this.leftDelimiter = '[',
-    this.rightDelimiter = ']',
-    this.rainbow = true,
-    this.showPercent = true}) {
+      {this.complete = 100,
+      this.width,
+      this.column,
+      this.row,
+      this.startColumn = 1,
+      this.completeChar = '=',
+      this.forwardChar = '>',
+      this.unfinishChar = ' ',
+      this.leftDelimiter = '[',
+      this.rightDelimiter = ']',
+      this.rainbow = true,
+      this.showPercent = true}) {
     width ??= Console.columns;
+    _startColorIndex = Random().nextInt(RainbowColors.length - 1);
   }
 
   void update(int progress) {
@@ -72,7 +74,7 @@ class RainbowProgress {
 
     var digits = percent.toString().length;
 
-    var w = showPercent ? width - digits - 4 : width - 4;
+    var w = showPercent ? width - digits - 4 : width - 2;
 
     var count = (ratio * w).toInt();
     var before = showPercent ? '${percent}% ${leftDelimiter}' : leftDelimiter;
@@ -80,21 +82,25 @@ class RainbowProgress {
 
     var out = StringBuffer(before);
 
-    for (var x = 1; x < count; x++) {
-      var content = ColorText()
-        .setColor(RainbowColors[x % RainbowColors.length])
-        .text(completeChar)
-        .normal();
+    var colorIndex = _startColorIndex;
+
+    for (var x = 1; x < count; x++, colorIndex++) {
+      var content = ColorText();
+      if (rainbow)
+        content.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+
+      content.text(completeChar).normal();
       out.write(content);
     }
 
-    out.write(ColorText()
-       .setColor(RainbowColors[count % RainbowColors.length])
-       .text(forwardChar)
-       .normal()
-       .toString());
+    var forward = ColorText();
+    if (rainbow)
+      forward.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+    forward.text(forwardChar).normal();
+    out.write(forward.toString());
+    colorIndex++;
 
-    for (var x = count; x < w; x++) {
+    for (var x = count + 1; x < w; x++) {
       out.write(unfinishChar);
     }
 

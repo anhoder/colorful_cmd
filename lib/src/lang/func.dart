@@ -1,14 +1,15 @@
 part of lang;
 
-List<String> toLocal(List<String> list, Map<String, String> lang) {
-  if (lang == null) return list;
-  var res = list.map((item) {
-    if (lang.containsKey(item)) {
-      return lang[item];
-    } else {
-      return item;
-    }
-  });
+String toLocal(ILang lang, String englishWord) {
+  if (lang == null) return englishWord;
+  var wordsMap = lang.wordsMap;
+  return wordsMap.containsKey(englishWord) && wordsMap[englishWord] != null
+      ? wordsMap[englishWord]
+      : englishWord;
+}
 
-  return res.toList();
+List<String> localHelpInfo(ILang lang) {
+  var helpInfo =
+      lang == null || lang.helpInfo == null ? HELP_INFO : lang.helpInfo;
+  return helpInfo == null ? [] : helpInfo.split('\n');
 }
