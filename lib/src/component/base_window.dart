@@ -18,7 +18,6 @@ abstract class BaseWindow {
   void initialize();
 
   void _init() {
-
     if (!Platform.isWindows) {
       stdin.echoMode = false;
 

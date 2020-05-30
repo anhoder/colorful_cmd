@@ -7,18 +7,20 @@ class WindowUI extends BaseWindow {
   String welcomeMsg;
   Color primaryColor;
   int welcomeDuration;
-  Map<String, String> lang;
+  ILang lang;
   List<String> menu;
   int menuPageSize;
   List<String> Function(WindowUI) beforeEnterMenu;
+  int selectIndex = 0;
+  bool progressRainbow;
 
   String _menuTitle;
   bool _hasShownWelcome = false;
-  int _selectIndex = 0;
-  int _startRow;
-  int _startColumn;
+  int startRow;
+  int startColumn;
   bool _doubleColumn;
   final List<_MenuItem> _menuStack = [];
+  int _curMaxMenuRow;
 
   WindowUI(
       {this.showTitle = true,
@@ -31,8 +33,9 @@ class WindowUI extends BaseWindow {
       this.lang,
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
+      this.progressRainbow = true,
       this.menuPageSize = 10})
-      : super(' ${name} ') {
+      : super(name) {
     if ((!(primaryColor is String) || primaryColor != 'random') &&
         !(primaryColor is Color)) {
       primaryColor = 'random';
@@ -50,8 +53,9 @@ class WindowUI extends BaseWindow {
     } else {
       menu.add('Help');
     }
-    menu = toLocal(menu, lang);
   }
+
+  int get curMenuStackLevel => _menuStack.length;
 
   @override
   void draw() {
@@ -59,19 +63,26 @@ class WindowUI extends BaseWindow {
     Console.moveCursor(row: 1, column: 1);
 
     if ((showWelcome && _hasShownWelcome && showTitle) ||
-      (!showWelcome && showTitle)) _displayTitle();
+        (!showWelcome && showTitle)) _displayTitle();
 
     if (showWelcome && !_hasShownWelcome) {
       _displayWelcome(welcomeMsg);
       var progress = RainbowProgress(
-        completeChar: '#', 
-        forwardChar: '#', 
-        leftDelimiter: ColorText().gray('[').toString(),
-        rightDelimiter: ColorText().gray(']').toString(),
-      );
+          completeChar:
+              progressRainbow ? '#' : ColorText().gray('#').toString(),
+          forwardChar: progressRainbow ? '#' : ColorText().gray('#').toString(),
+          leftDelimiter: ColorText().gray('[').toString(),
+          rightDelimiter: ColorText().gray(']').toString(),
+          showPercent: false,
+          rainbow: progressRainbow);
+
       var interval = 20;
       Timer.periodic(Duration(milliseconds: interval), (timer) {
-        progress.update(((timer.tick / (welcomeDuration / interval).round()) * 100).round());
+        Console.moveCursorDown(2);
+        progress.update(
+            ((timer.tick / (welcomeDuration / interval).round()) * 100)
+                .round());
+        Console.moveCursorUp(2);
 
         if (timer.tick >= (welcomeDuration / interval).round()) {
           _hasShownWelcome = true;
@@ -105,22 +116,26 @@ class WindowUI extends BaseWindow {
   }
 
   void enterMenu() {
-    if (_selectIndex >= menu.length) return;
-    _menuStack.add(_MenuItem(menu, _selectIndex, _menuTitle));
+    if (selectIndex >= menu.length) return;
+    _menuStack.add(_MenuItem(menu, selectIndex, _menuTitle));
     _earseMenu();
-    _menuTitle = menu[_selectIndex];
-    
-    if (_menuStack.length == 1 && _selectIndex == menu.length - 1) {
+    _menuTitle = menu[selectIndex];
+
+    if (_menuStack.length == 1 && selectIndex == menu.length - 1) {
       menu = [];
-      Console.moveCursor(row: _startRow, column: _startColumn);
-      // Console.write('123');
-      // TODO Help document
+      selectIndex = 0;
+      var row = startRow;
+      localHelpInfo(lang).forEach((element) {
+        Console.moveCursor(row: row, column: startColumn);
+        Console.write(element);
+        row++;
+      });
+      _curMaxMenuRow = row - 1;
     } else {
       menu = beforeEnterMenu == null ? [] : (beforeEnterMenu(this) ?? []);
+      selectIndex = 0;
+      _displayList();
     }
-
-    _selectIndex = 0;
-    _displayList();
   }
 
   void backMenu() {
@@ -129,18 +144,20 @@ class WindowUI extends BaseWindow {
 
     _earseMenu();
     menu = menuItem.list;
-    _selectIndex = menuItem.index;
+    _curMaxMenuRow = _doubleColumn
+        ? startRow + (menu.length / 2).ceil() - 1
+        : startRow + menu.length - 1;
+    selectIndex = menuItem.index;
     _menuTitle = menuItem.menuTitle;
     _earseMenu();
     _displayList();
   }
 
   void _earseMenu() {
-    var lines = _doubleColumn ? (menu.length / 2).ceil() : menu.length;
     _repeatFunction((i) {
-      Console.moveCursor(row: _startRow + i - 1);
+      Console.moveCursor(row: startRow + i - 1);
       Console.eraseLine();
-    }, lines);
+    }, _curMaxMenuRow - startRow + 1);
   }
 
   void _displayWelcome(String welcomeMsg) {
@@ -166,7 +183,8 @@ class WindowUI extends BaseWindow {
 
     Console.resetAll();
     _repeatFunction((i) {
-      Console.setTextColor(primaryColor.id, bright: primaryColor.bright, xterm: primaryColor.xterm);
+      Console.setTextColor(primaryColor.id,
+          bright: primaryColor.bright, xterm: primaryColor.xterm);
       Console.write('─');
     }, width);
   }
@@ -174,12 +192,13 @@ class WindowUI extends BaseWindow {
   void _displayTitle() {
     _displayBorder();
     Console.resetAll();
-    Console.setTextColor(primaryColor.id, bright: true, xterm: primaryColor.xterm);
+    Console.setTextColor(primaryColor.id,
+        bright: true, xterm: primaryColor.xterm);
     Console.moveCursor(
       row: 1,
       column: (Console.columns / 2).round() - (title.length / 2).round(),
     );
-    Console.write(title);
+    Console.write(' ${toLocal(lang, title)} ');
     _repeatFunction((i) => Console.write('\n'), Console.rows - 1);
     Console.moveCursor(row: 2, column: 1);
     Console.centerCursor(row: true);
@@ -190,22 +209,29 @@ class WindowUI extends BaseWindow {
     var width = Console.columns;
     var height = Console.rows;
     _doubleColumn = width >= 60;
-    _startRow = (height / 3).floor();
-    _startColumn = _doubleColumn ? ((width - 60) / 2).floor() : ((width - 20) / 2).floor();
-    
-    if (showTitle && _startRow > 2) {
+    startRow = (height / 3).floor();
+    startColumn = _doubleColumn
+        ? ((width - 60) / 2).floor() + 15
+        : ((width - 20) / 2).floor() + 6;
+    _curMaxMenuRow = _doubleColumn
+        ? startRow + (menu.length / 2).ceil() - 1
+        : startRow + menu.length - 1;
+
+    if (showTitle && startRow > 2) {
       Console.resetAll();
-      var row = _startRow > 4 ? _startRow - 3 : 2;
-      Console.moveCursor(row: row, column: _doubleColumn ? _startColumn + 15 : _startColumn + 6);
-      Console.setTextColor(Color.GREEN.id, bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
+      var row = startRow > 4 ? startRow - 3 : 2;
+      Console.moveCursor(row: row, column: startColumn);
+      Console.setTextColor(Color.GREEN.id,
+          bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
       Console.eraseLine();
-      Console.write(_menuTitle);
-    } else if (!showTitle && _startRow > 1) {
-      var row = _startRow > 3 ? _startRow - 3 : 2;
-      Console.moveCursor(row: row, column: _doubleColumn ? _startColumn + 15 : _startColumn + 6);
-      Console.setTextColor(Color.GREEN.id, bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
+      Console.write(toLocal(lang, _menuTitle));
+    } else if (!showTitle && startRow > 1) {
+      var row = startRow > 3 ? startRow - 3 : 2;
+      Console.moveCursor(row: row, column: startColumn);
+      Console.setTextColor(Color.GREEN.id,
+          bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
       Console.eraseLine();
-      Console.write(_menuTitle);
+      Console.write(toLocal(lang, _menuTitle));
     }
 
     Console.resetAll();
@@ -219,22 +245,23 @@ class WindowUI extends BaseWindow {
   void _displayLine(int line) {
     Console.write('\r');
     var index = _doubleColumn ? line * 2 : line;
-    Console.moveCursor(row: _startRow + line, column: _doubleColumn ? _startColumn + 15 : _startColumn + 6);
+    Console.moveCursor(row: startRow + line, column: startColumn);
     _displayItem(index);
     if (_doubleColumn && index < menu.length - 1) {
-      Console.moveCursor(row: _startRow + line, column: _startColumn + 40);
+      Console.moveCursor(row: startRow + line, column: startColumn + 40);
       _displayItem(index + 1);
     }
   }
 
   void _displayItem(int index) {
     Console.moveCursorBack(4);
-    if (_selectIndex == index) {
-      Console.setTextColor(primaryColor.id, bright: primaryColor.bright, xterm: primaryColor.xterm);
-      Console.write(' => ${index}. ${menu[index]}');
+    if (selectIndex == index) {
+      Console.setTextColor(primaryColor.id,
+          bright: primaryColor.bright, xterm: primaryColor.xterm);
+      Console.write(' => ${index}. ${toLocal(lang, menu[index])}');
       Console.resetAll();
     } else {
-      Console.write('    ${index}. ${menu[index]}');
+      Console.write('    ${index}. ${toLocal(lang, menu[index])}');
     }
   }
 
@@ -249,17 +276,17 @@ class WindowUI extends BaseWindow {
   void _moveDown(_) {
     int curLine;
     if (_doubleColumn) {
-      if (_selectIndex + 2 > menu.length - 1) {
+      if (selectIndex + 2 > menu.length - 1) {
         return;
       }
-      _selectIndex += 2;
-      curLine = (_selectIndex / 2).floor();
+      selectIndex += 2;
+      curLine = (selectIndex / 2).floor();
     } else {
-      if (_selectIndex + 1 > menu.length - 1) {
+      if (selectIndex + 1 > menu.length - 1) {
         return;
       }
-      _selectIndex++;
-      curLine = _selectIndex;
+      selectIndex++;
+      curLine = selectIndex;
     }
     _displayLine(curLine - 1);
     _displayLine(curLine);
@@ -268,38 +295,39 @@ class WindowUI extends BaseWindow {
   void _moveUp(_) {
     int curLine;
     if (_doubleColumn) {
-      if (_selectIndex - 2 < 0) {
+      if (selectIndex - 2 < 0) {
         return;
       }
-      _selectIndex -= 2;
-      curLine = (_selectIndex / 2).floor();
+      selectIndex -= 2;
+      curLine = (selectIndex / 2).floor();
     } else {
-      if (_selectIndex - 1 < 0) {
+      if (selectIndex - 1 < 0) {
         return;
       }
-      _selectIndex--;
-      curLine = _selectIndex;
+      selectIndex--;
+      curLine = selectIndex;
     }
     _displayLine(curLine + 1);
     _displayLine(curLine);
   }
 
   void _moveLeft(_) {
-    if (!_doubleColumn || _selectIndex % 2 == 0 || _selectIndex - 1 < 0) {
+    if (!_doubleColumn || selectIndex % 2 == 0 || selectIndex - 1 < 0) {
       return;
     }
-    _selectIndex -= 1;
-    var curLine = (_selectIndex / 2).floor();
+    selectIndex -= 1;
+    var curLine = (selectIndex / 2).floor();
     _displayLine(curLine);
   }
 
   void _moveRight(_) {
-    if (!_doubleColumn || _selectIndex % 2 != 0 || _selectIndex + 1 > menu.length - 1) {
+    if (!_doubleColumn ||
+        selectIndex % 2 != 0 ||
+        selectIndex + 1 > menu.length - 1) {
       return;
     }
-    _selectIndex += 1;
-    var curLine = (_selectIndex / 2).floor();
+    selectIndex += 1;
+    var curLine = (selectIndex / 2).floor();
     _displayLine(curLine);
   }
-
 }
