@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:colorful_cmd/component.dart';
 import 'package:colorful_cmd/utils.dart';
 import 'package:console/console.dart';
@@ -33,7 +35,7 @@ void main(List<String> args) {
           return [];
       }
     },
-    // lang: Chinese() // lang
+    lang: Chinese() // lang
   );
   window.display();
 }

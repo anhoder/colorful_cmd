@@ -1,4 +1,5 @@
 import 'package:colorful_cmd/lang.dart';
+import 'package:colorful_cmd/utils.dart';
 
 class Chinese implements ILang {
   @override
@@ -22,12 +23,12 @@ class Chinese implements ILang {
 
   @override
   String get helpInfo => '''
-h | H | LEFT: 左
-l | L | RIGHT: 右
-j | J | DOWN: 下
-k | K | UP: 上
-n | N | ENTER: 进入选中的菜单
-b | B | ESC: 返回上一级菜单
-q | Q: 退出
+${ColorText().cyan('h / H / LEFT').toString()}\t\t${ColorText().blue('左').toString()}
+${ColorText().cyan('l / L / RIGHT').toString()}\t\t${ColorText().blue('右').toString()}
+${ColorText().cyan('j / J / DOWN').toString()}\t\t${ColorText().blue('下').toString()}
+${ColorText().cyan('k / K / UP').toString()}\t\t${ColorText().blue('上').toString()}
+${ColorText().cyan('n / N / ENTER').toString()}\t\t${ColorText().blue('进入选中的菜单项').toString()}
+${ColorText().cyan('b / B / ESC').toString()}\t\t${ColorText().blue('返回上级菜单').toString()}
+${ColorText().cyan('q / Q').toString()}\t\t\t${ColorText().blue('退出').toString()}
 ''';
 }
