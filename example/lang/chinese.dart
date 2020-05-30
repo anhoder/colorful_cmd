@@ -22,12 +22,12 @@ class Chinese implements ILang {
 
   @override
   String get helpInfo => '''
-h|H: 左
-j|J: 下
-k|K: 上
-l|L: 右
-n|N: 进入选中的菜单
-b|B: 返回上一级菜单
-q|Q: 退出
-  ''';
+h | H | LEFT: 左
+l | L | RIGHT: 右
+j | J | DOWN: 下
+k | K | UP: 上
+n | N | ENTER: 进入选中的菜单
+b | B | ESC: 返回上一级菜单
+q | Q: 退出
+''';
 }

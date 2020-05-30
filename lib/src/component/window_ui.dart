@@ -107,12 +107,12 @@ class WindowUI extends BaseWindow {
   void initialize() {
     Console.hideCursor();
     Keyboard.bindKeys(['q', 'Q']).listen(_quit);
-    Keyboard.bindKeys([KeyCode.UP, 'k', 'K']).listen(_moveUp);
-    Keyboard.bindKeys([KeyCode.DOWN, 'j', 'J']).listen(_moveDown);
-    Keyboard.bindKeys([KeyCode.LEFT, 'h', 'H']).listen(_moveLeft);
-    Keyboard.bindKeys([KeyCode.RIGHT, 'l', 'L']).listen(_moveRight);
-    Keyboard.bindKey('n').listen((_) => enterMenu());
-    Keyboard.bindKey('b').listen((_) => backMenu());
+    Keyboard.bindKeys([KeyName.UP, 'k', 'K']).listen(_moveUp);
+    Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(_moveDown);
+    Keyboard.bindKeys([KeyName.LEFT, 'h', 'H']).listen(_moveLeft);
+    Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(_moveRight);
+    Keyboard.bindKeys([KeyName.ENTER, 'n', 'N']).listen((_) => enterMenu());
+    Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen((_) => backMenu());
   }
 
   void enterMenu() {
