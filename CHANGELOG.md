@@ -11,3 +11,7 @@
 - Add RainbowProgress
 - Add WindowUi
 - Update ColorText
+
+## 1.1.0
+
+- Optimize menu render
