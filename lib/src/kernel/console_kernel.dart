@@ -48,7 +48,8 @@ class ConsoleKernel<T> extends CommandRunner<T> {
     var usagePrefix = 'Usage: \n';
     var pen = ColorText()
         .gold(_wrap(usagePrefix))
-        .white('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
+        .normal()
+        .text('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
         .gold('Global options: \n')
         .green('  ${argParser.usage}\n\n')
         .text(
@@ -63,10 +64,12 @@ class ConsoleKernel<T> extends CommandRunner<T> {
 
   void addGroupCommands() {
     groupsCommands.forEach((command) {
-      if (command.name == null)
+      if (command.name == null) {
         throw VariableIsNullException('${command.runtimeType}\'s name');
-      if (command.description == null)
+      }
+      if (command.description == null) {
         throw VariableIsNullException('${command.runtimeType}\'s description');
+      }
       addCommand(command);
     });
   }
@@ -135,11 +138,13 @@ class ConsoleKernel<T> extends CommandRunner<T> {
     var groupCmdMaps = <String, String>{};
     var cmdsNotInGroup = <String>[];
     names.forEach((name) {
-      if (name == null)
+      if (name == null) {
         throw VariableIsNullException('${commands[name].runtimeType}\'s name');
-      if (commands[name].description == null)
+      }
+      if (commands[name].description == null) {
         throw VariableIsNullException(
             '${commands[name].runtimeType}\'s description');
+      }
       var index = name.indexOf(':');
       if (index >= 0) {
         groupCmdMaps[name] = name.substring(0, index);
@@ -153,7 +158,7 @@ class ConsoleKernel<T> extends CommandRunner<T> {
     }).reduce(max);
 
     var buffer = StringBuffer(
-        ColorText().yellow('Available ${isSubcommand ? "sub" : ""}commands:'));
+        ColorText().gold('Available ${isSubcommand ? "sub" : ""}commands:'));
     var columnStart = length + 5;
 
     /// display commands that not in groups
@@ -164,7 +169,8 @@ class ConsoleKernel<T> extends CommandRunner<T> {
 
       buffer.write(ColorText()
           .green('  ${padRight(name, length)}   ')
-          .white(lines.first));
+          .normal()
+          .text(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();
@@ -189,7 +195,8 @@ class ConsoleKernel<T> extends CommandRunner<T> {
       }
       buffer.write(ColorText()
           .green('  ${padRight(name, length)}   ')
-          .white(lines.first));
+          .normal()
+          .text(lines.first));
 
       for (var line in lines.skip(1)) {
         buffer.writeln();

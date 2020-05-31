@@ -2,17 +2,42 @@ A library for building a beautiful command line application in dart.
 
 ## Dependency
 
+
 * console
 * args
 
 ## Preview
 
-* ubuntu 
-![ubuntu](./example/ubuntu.png)
-* windows
-![windows](./example/windows.png)
+
+### Diff OS
+
+* Ubuntu 
+![Ubuntu](./example/preview/ubuntu.png)
+* Windows
+![Windows](./example/preview/windows.png)
+* Mac
+![Mac](./example/preview/mac.png)
+
+### ColorText
+
+![ColorText](./example/preview/color_text.png)
+
+### Command
+
+![Command](./example/preview/command.png)
+
+### RainbowProgress
+
+![RainbowProgress](./example/preview/rainbow_progress.png)
+
+### WindowUI
+
+![WindowUI](./example/preview/window_ui.png)
+![WindowUI2](./example/preview/window_ui2.png)
+
 
 ## Usage
+
 
 A simple usage example:
 
@@ -48,45 +73,25 @@ class RootCommand extends ICmd {
     warning(description);
     var colorText = ColorText();
     colorText
-      ..gold('\n\n\ngold\n')
-      ..green('green\n')
-      ..blue('blue\n')
-      ..cyan('cyan\n')
-      ..darkBlue('darkBlue\n')
-      ..darkRed('darkRed\n')
-      ..gray('gray\n')
-      ..lightCyan('lightCyan\n')
-      ..lightGray('lightGray\n')
-      ..lightMagenta('lightMagenta\n')
-      ..lime('lime\n')
-      ..magenta('magenta\n')
-      ..red('red\n')
-      ..white('white\n')
-      ..black('black\n')
-      ..yellow('yellow\n')
-      ..print();
+      .gold('\n\n\ngold\n')
+      .green('green\n')
+      .blue('blue\n')
+      .cyan('cyan\n')
+      .darkBlue('darkBlue\n')
+      .darkRed('darkRed\n')
+      .gray('gray\n')
+      .lightCyan('lightCyan\n')
+      .lightGray('lightGray\n')
+      .lightMagenta('lightMagenta\n')
+      .lime('lime\n')
+      .magenta('magenta\n')
+      .red('red\n')
+      .white('white\n')
+      .black('black\n')
+      .yellow('yellow\n')
+      .print();
   }
 }
 ```
 
-Other: 
-
-```dart
-  Color // color, enum type
-  ColorText // colorful text
-  Icon 
-  KeyCode 
-  Keyboard 
-  ProgressBar 
-  LoadingBar 
-  WideLoadingBar 
-  Prompter 
-  readInput() 
-  ShellPrompt
-  Chooser 
-  Timer 
-  createTree() 
-  printTree() 
-  Window 
-  // ...
-```
+**For more examples, see the example folder.**
