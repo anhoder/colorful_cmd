@@ -15,3 +15,7 @@
 ## 1.1.0
 
 - Optimize menu render
+
+## 1.2.0
+
+- WindowUI add bindKey() and bindKeys()

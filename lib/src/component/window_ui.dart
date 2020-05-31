@@ -119,6 +119,16 @@ class WindowUI extends BaseWindow {
     Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
   }
 
+  WindowUI bindKey(String key, void Function(String key) func) {
+    Keyboard.bindKey(key).listen(func);
+    return this;
+  }
+
+  WindowUI bindKeys(List<String> keys, void Function(String key) func) {
+    Keyboard.bindKeys(keys).listen(func);
+    return this;
+  }
+
   void enterMenu(_) {
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
