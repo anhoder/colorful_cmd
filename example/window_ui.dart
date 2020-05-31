@@ -8,37 +8,37 @@ import 'lang/chinese.dart';
 
 void main(List<String> args) {
   var window = WindowUI(
-    welcomeMsg: 'WIN-UI',
-    menu: [
-      'Pay',
-      'Collection',
-      'Photo',
-      'Card',
-      'Emoji',
-      'Setting',
-      'Test',
-      'Product',
-      'Developer',
-      'Manager'
-    ],
-    name: 'WIN_UI',
-    showWelcome: false,
-    beforeEnterMenu: (ui) {
-      if (ui.curMenuStackLevel != 1) return [];
-      switch (ui.selectIndex) {
-        case 0:
-          return ['Alipay', 'WeChat Pay'];
-        case 1:
-          Console.moveCursor(column: ui.startColumn, row: ui.startRow);
-          Console.write(ColorText().blue('This is Collection').toString());
-          return [];
-        default:
-          return [];
-      }
-    },
-    menuPageSize: 10,
-    doubleColumn: false,
-    lang: Chinese() // lang
-  );
+      welcomeMsg: 'WIN-UI',
+      menu: [
+        'Pay',
+        'Collection',
+        'Photo',
+        'Card',
+        'Emoji',
+        'Setting',
+        'Test',
+        'Product',
+        'Developer',
+        'Manager'
+      ],
+      name: 'WIN_UI',
+      showWelcome: false,
+      beforeEnterMenu: (ui) {
+        if (ui.curMenuStackLevel != 1) return [];
+        switch (ui.selectIndex) {
+          case 0:
+            return ['Alipay', 'WeChat Pay'];
+          case 1:
+            Console.moveCursor(column: ui.startColumn, row: ui.startRow);
+            Console.write(ColorText().blue('This is Collection').toString());
+            return [];
+          default:
+            return [];
+        }
+      },
+      menuPageSize: 10,
+      doubleColumn: false,
+      lang: Chinese() // lang
+      );
   window.display();
 }

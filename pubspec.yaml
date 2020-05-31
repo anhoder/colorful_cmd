@@ -1,6 +1,6 @@
 name: colorful_cmd
 description: A library for building a beautiful command line application in dart.
-version: 0.1.0
+version: 1.0.0
 homepage: https://alanalbert.github.io
 
 environment:

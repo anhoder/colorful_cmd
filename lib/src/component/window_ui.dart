@@ -56,7 +56,7 @@ class WindowUI extends BaseWindow {
     } else {
       menu.add('Help');
     }
-    
+
     Console.hideCursor();
   }
 
@@ -119,7 +119,6 @@ class WindowUI extends BaseWindow {
     Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
   }
 
-
   void enterMenu(_) {
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
@@ -146,7 +145,6 @@ class WindowUI extends BaseWindow {
     }
   }
 
-
   void backMenu(_) {
     if (showWelcome && !_hasShownWelcome) return;
     if (_menuStack.isEmpty) return;
@@ -163,14 +161,12 @@ class WindowUI extends BaseWindow {
     _displayList();
   }
 
-
   void _earseMenu() {
     _repeatFunction((i) {
       Console.moveCursor(row: startRow + i - 1);
       Console.eraseLine();
     }, _curMaxMenuRow - startRow + 1);
   }
-
 
   void _displayWelcome(String welcomeMsg) {
     var msg = formatChars(welcomeMsg);
@@ -190,7 +186,6 @@ class WindowUI extends BaseWindow {
     Console.moveCursor(column: column, row: row);
   }
 
-
   void _displayBorder() {
     var width = Console.columns;
 
@@ -201,7 +196,6 @@ class WindowUI extends BaseWindow {
       Console.write('─');
     }, width);
   }
-
 
   void _displayTitle() {
     _displayBorder();
@@ -218,7 +212,6 @@ class WindowUI extends BaseWindow {
     Console.centerCursor(row: true);
     Console.resetBackgroundColor();
   }
-
 
   void _displayMenuTitle() {
     var menuTitle = toLocal(lang, _menuTitle);
@@ -241,15 +234,13 @@ class WindowUI extends BaseWindow {
     }
   }
 
-
   void _displayList() {
     var width = Console.columns;
     var height = Console.rows;
     _doubleColumn = doubleColumn ?? width >= 80;
     startRow = (height / 3).floor();
-    startColumn = _doubleColumn
-        ? ((width - 60) / 2).floor()
-        : ((width - 20) / 2).floor();
+    startColumn =
+        _doubleColumn ? ((width - 60) / 2).floor() : ((width - 20) / 2).floor();
     _curMaxMenuRow = _doubleColumn
         ? startRow + (menu.length / 2).ceil() - 1
         : startRow + menu.length - 1;
@@ -258,17 +249,19 @@ class WindowUI extends BaseWindow {
 
     Console.resetAll();
     Console.setTextColor(Color.WHITE.id, bright: false, xterm: false);
-    var curMenus = menu.getRange((menuPage - 1) * menuPageSize, min(menu.length, menuPage * menuPageSize));
+    var curMenus = menu.getRange((menuPage - 1) * menuPageSize,
+        min(menu.length, menuPage * menuPageSize));
     var lines = _doubleColumn ? (curMenus.length / 2).ceil() : curMenus.length;
     for (var i = 0; i < lines; i++) {
       _displayLine(i);
     }
   }
 
-
   void _displayLine(int line) {
     Console.write('\r');
-    var index = _doubleColumn ? line * 2 + (menuPage - 1) * menuPageSize : line + (menuPage - 1) * menuPageSize;
+    var index = _doubleColumn
+        ? line * 2 + (menuPage - 1) * menuPageSize
+        : line + (menuPage - 1) * menuPageSize;
     index = min(menu.length - 1, index);
     Console.moveCursor(row: startRow + line, column: startColumn);
     _displayItem(index);
@@ -282,7 +275,6 @@ class WindowUI extends BaseWindow {
       Console.moveCursorForward();
     }, Console.columns);
   }
-
 
   void _displayItem(int index) {
     Console.moveCursorBack(4);

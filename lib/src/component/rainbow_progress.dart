@@ -104,8 +104,7 @@ class RainbowProgress {
       out.write(unfinishChar);
     }
 
-    if (current != 1 && current != complete)
-      out.write(unfinishChar);
+    if (current != 1 && current != complete) out.write(unfinishChar);
 
     out.write(after);
 
