@@ -9,12 +9,12 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   ILang lang;
   List<String> menu;
-  int menuPageSize;
   List<String> Function(WindowUI) beforeEnterMenu;
   int selectIndex = 0;
   bool progressRainbow;
-  int page = 1;
-  int pageSize = 10;
+  int menuPage = 1;
+  int menuPageSize = 10;
+  bool doubleColumn;
 
   String _menuTitle;
   bool _hasShownWelcome = false;
@@ -36,6 +36,7 @@ class WindowUI extends BaseWindow {
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
       this.progressRainbow = true,
+      this.doubleColumn,
       this.menuPageSize = 10})
       : super(name) {
     if ((!(primaryColor is String) || primaryColor != 'random') &&
@@ -55,6 +56,8 @@ class WindowUI extends BaseWindow {
     } else {
       menu.add('Help');
     }
+    
+    Console.hideCursor();
   }
 
   int get curMenuStackLevel => _menuStack.length;
@@ -107,7 +110,6 @@ class WindowUI extends BaseWindow {
 
   @override
   void initialize() {
-    Console.hideCursor();
     Keyboard.bindKeys(['q', 'Q']).listen(_quit);
     Keyboard.bindKeys([KeyName.UP, 'k', 'K']).listen(_moveUp);
     Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(_moveDown);
@@ -243,7 +245,7 @@ class WindowUI extends BaseWindow {
   void _displayList() {
     var width = Console.columns;
     var height = Console.rows;
-    _doubleColumn = width >= 80;
+    _doubleColumn = doubleColumn ?? width >= 80;
     startRow = (height / 3).floor();
     startColumn = _doubleColumn
         ? ((width - 60) / 2).floor()
@@ -256,7 +258,8 @@ class WindowUI extends BaseWindow {
 
     Console.resetAll();
     Console.setTextColor(Color.WHITE.id, bright: false, xterm: false);
-    var lines = _doubleColumn ? (menu.length / 2).ceil() : menu.length;
+    var curMenus = menu.getRange((menuPage - 1) * menuPageSize, min(menu.length, menuPage * menuPageSize));
+    var lines = _doubleColumn ? (curMenus.length / 2).ceil() : curMenus.length;
     for (var i = 0; i < lines; i++) {
       _displayLine(i);
     }
@@ -265,7 +268,8 @@ class WindowUI extends BaseWindow {
 
   void _displayLine(int line) {
     Console.write('\r');
-    var index = _doubleColumn ? line * 2 : line;
+    var index = _doubleColumn ? line * 2 + (menuPage - 1) * menuPageSize : line + (menuPage - 1) * menuPageSize;
+    index = min(menu.length - 1, index);
     Console.moveCursor(row: startRow + line, column: startColumn);
     _displayItem(index);
     if (_doubleColumn && index < menu.length - 1) {
@@ -294,6 +298,19 @@ class WindowUI extends BaseWindow {
     }
   }
 
+  void _prePage() {
+    if (menuPage <= 1) return;
+    menuPage--;
+    _earseMenu();
+    _displayList();
+  }
+
+  void _nextPage() {
+    if (menuPage >= (menu.length / menuPageSize).ceil()) return;
+    menuPage++;
+    _earseMenu();
+    _displayList();
+  }
 
   void _quit(_) {
     Console.showCursor();
@@ -311,16 +328,20 @@ class WindowUI extends BaseWindow {
         return;
       }
       selectIndex += 2;
-      curLine = (selectIndex / 2).floor();
+      curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     } else {
       if (selectIndex + 1 > menu.length - 1) {
         return;
       }
       selectIndex++;
-      curLine = selectIndex;
+      curLine = selectIndex - (menuPage - 1) * menuPageSize;
     }
-    _displayLine(curLine - 1);
-    _displayLine(curLine);
+    if (selectIndex >= menuPage * menuPageSize) {
+      _nextPage();
+    } else {
+      _displayLine(curLine - 1);
+      _displayLine(curLine);
+    }
   }
 
   void _moveUp(_) {
@@ -331,16 +352,20 @@ class WindowUI extends BaseWindow {
         return;
       }
       selectIndex -= 2;
-      curLine = (selectIndex / 2).floor();
+      curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     } else {
       if (selectIndex - 1 < 0) {
         return;
       }
       selectIndex--;
-      curLine = selectIndex;
+      curLine = selectIndex - (menuPage - 1) * menuPageSize;
     }
-    _displayLine(curLine + 1);
-    _displayLine(curLine);
+    if (selectIndex < (menuPage - 1) * menuPageSize) {
+      _prePage();
+    } else {
+      _displayLine(curLine + 1);
+      _displayLine(curLine);
+    }
   }
 
   void _moveLeft(_) {
@@ -349,7 +374,7 @@ class WindowUI extends BaseWindow {
       return;
     }
     selectIndex -= 1;
-    var curLine = (selectIndex / 2).floor();
+    var curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     _displayLine(curLine);
   }
 
@@ -361,7 +386,7 @@ class WindowUI extends BaseWindow {
       return;
     }
     selectIndex += 1;
-    var curLine = (selectIndex / 2).floor();
+    var curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     _displayLine(curLine);
   }
 }

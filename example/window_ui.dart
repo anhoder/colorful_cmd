@@ -22,6 +22,7 @@ void main(List<String> args) {
       'Manager'
     ],
     name: 'WIN_UI',
+    showWelcome: false,
     beforeEnterMenu: (ui) {
       if (ui.curMenuStackLevel != 1) return [];
       switch (ui.selectIndex) {
@@ -35,6 +36,8 @@ void main(List<String> args) {
           return [];
       }
     },
+    menuPageSize: 10,
+    doubleColumn: false,
     lang: Chinese() // lang
   );
   window.display();
