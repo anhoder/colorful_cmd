@@ -1,11 +1,11 @@
 part of component;
 
-const String HELP_INFO = '''
-h|H: left
-j|J: down
-k|K: up
-l|L: right
-n|N: enter selected menu
-b|B: go back upper menu
-q|Q: quit
+String HELP_INFO = '''
+${ColorText().cyan('h / H / LEFT').toString()}         ${ColorText().blue('left').toString()}
+${ColorText().cyan('l / L / RIGHT').toString()}        ${ColorText().blue('right').toString()}
+${ColorText().cyan('j / J / DOWN').toString()}         ${ColorText().blue('down').toString()}
+${ColorText().cyan('k / K / UP').toString()}           ${ColorText().blue('up').toString()}
+${ColorText().cyan('n / N / ENTER').toString()}        ${ColorText().blue('enter selected menu').toString()}
+${ColorText().cyan('b / B / ESC').toString()}          ${ColorText().blue('go back upper menu').toString()}
+${ColorText().cyan('q / Q').toString()}                ${ColorText().blue('quit').toString()}
 ''';
