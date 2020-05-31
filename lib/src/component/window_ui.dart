@@ -273,7 +273,7 @@ class WindowUI extends BaseWindow {
       Console.write(' ');
       Console.moveCursorBack();
       Console.moveCursorForward();
-    }, Console.columns);
+    }, startColumn - 40);
   }
 
   void _displayItem(int index) {
