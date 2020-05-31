@@ -13,6 +13,8 @@ class WindowUI extends BaseWindow {
   List<String> Function(WindowUI) beforeEnterMenu;
   int selectIndex = 0;
   bool progressRainbow;
+  int page = 1;
+  int pageSize = 10;
 
   String _menuTitle;
   bool _hasShownWelcome = false;
@@ -260,6 +262,7 @@ class WindowUI extends BaseWindow {
     }
   }
 
+
   void _displayLine(int line) {
     Console.write('\r');
     var index = _doubleColumn ? line * 2 : line;
@@ -276,6 +279,7 @@ class WindowUI extends BaseWindow {
     }, Console.columns);
   }
 
+
   void _displayItem(int index) {
     Console.moveCursorBack(4);
     var menuName = toLocal(lang, menu[index]);
@@ -289,6 +293,7 @@ class WindowUI extends BaseWindow {
       Console.write('    ${index}. ${menuName}');
     }
   }
+
 
   void _quit(_) {
     Console.showCursor();
