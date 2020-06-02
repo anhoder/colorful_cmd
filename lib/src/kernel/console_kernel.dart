@@ -5,6 +5,7 @@ class ConsoleKernel<T> extends CommandRunner<T> {
   Color titleColor;
   Logger _logger;
   List<IGroup<T>> _groups = [];
+  Command defaultCommand;
 
   ConsoleKernel(
       {name = 'Command',
@@ -37,6 +38,24 @@ class ConsoleKernel<T> extends CommandRunner<T> {
   ConsoleKernel<T> addCommands(List<ICmd<T>> commands) {
     commands.forEach((command) => addCommand(command));
     return this;
+  }
+
+  ConsoleKernel<T> setDefaultCommand(ICmd<T> command) {
+    defaultCommand = command;
+    return this;
+  }
+
+  @override
+  Future<T> runCommand(ArgResults topLevelResults) async {
+    var argResults = topLevelResults;
+    if (commands.isNotEmpty && 
+      argResults.command == null && 
+      argResults.arguments.isEmpty &&
+      argResults.rest.isEmpty &&
+      defaultCommand != null) {
+      return (await defaultCommand.run()) as T;
+    }
+    return (await super.runCommand(topLevelResults));
   }
 
   @override
