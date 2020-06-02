@@ -19,7 +19,9 @@ void main(List<String> args) {
         'Test',
         'Product',
         'Developer',
-        'Manager'
+        'Manager',
+        'Test',
+        'Test2'
       ],
       name: 'WIN_UI',
       showWelcome: true,

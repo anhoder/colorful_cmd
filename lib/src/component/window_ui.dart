@@ -139,6 +139,7 @@ class WindowUI extends BaseWindow {
     if (_menuStack.length == 1 && selectIndex == menu.length - 1) {
       menu = [];
       selectIndex = 0;
+      menuPage = 0;
       _menuTitle = 'Help';
       _displayMenuTitle();
       var row = startRow;
@@ -151,6 +152,7 @@ class WindowUI extends BaseWindow {
     } else {
       menu = beforeEnterMenu == null ? [] : (beforeEnterMenu(this) ?? []);
       selectIndex = 0;
+      menuPage = 1;
       _displayList();
     }
   }
@@ -166,6 +168,7 @@ class WindowUI extends BaseWindow {
         ? startRow + (menu.length / 2).ceil() - 1
         : startRow + menu.length - 1;
     selectIndex = menuItem.index;
+    menuPage = ((selectIndex + 1) / menuPageSize).ceil();
     _menuTitle = menuItem.menuTitle;
     _earseMenu();
     _displayList();
