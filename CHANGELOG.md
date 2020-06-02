@@ -19,3 +19,7 @@
 ## 1.2.0
 
 - WindowUI add bindKey() and bindKeys()
+
+## 1.2.1
+
+- Fix the error when enter second page menu 
