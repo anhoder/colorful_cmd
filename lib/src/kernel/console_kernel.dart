@@ -5,6 +5,7 @@ class ConsoleKernel<T> extends CommandRunner<T> {
   Color titleColor;
   Logger _logger;
   List<IGroup<T>> _groups = [];
+  Command defaultCommand;
 
   ConsoleKernel(
       {name = 'Command',
@@ -39,6 +40,24 @@ class ConsoleKernel<T> extends CommandRunner<T> {
     return this;
   }
 
+  ConsoleKernel<T> setDefaultCommand(ICmd<T> command) {
+    defaultCommand = command;
+    return this;
+  }
+
+  @override
+  Future<T> runCommand(ArgResults topLevelResults) async {
+    var argResults = topLevelResults;
+    if (commands.isNotEmpty && 
+      argResults.command == null && 
+      argResults.arguments.isEmpty &&
+      argResults.rest.isEmpty &&
+      defaultCommand != null) {
+      return (await defaultCommand.run()) as T;
+    }
+    return (await super.runCommand(topLevelResults));
+  }
+
   @override
   String get usage =>
       '${_getTitle()}${_getDescription()}\n\n${_usageWithoutTitleAndDescription}';
@@ -51,15 +70,31 @@ class ConsoleKernel<T> extends CommandRunner<T> {
         .normal()
         .text('  ${_wrap(invocation, hangingIndent: usagePrefix.length)}\n\n')
         .gold('Global options: \n')
-        .green('  ${argParser.usage}\n\n')
-        .text(
-            '${_getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
+        .text('  ${_paintingOptionUsage()}\n\n')
+        .text('${_getCommandUsage(commands, lineLength: argParser.usageLineLength)}\n');
 
     if (usageFooter != null) {
       pen.cyan('\n${_wrap(usageFooter)}\n\n');
     }
 
     return pen.toString();
+  }
+
+  String _paintingOptionUsage()
+  {
+    var usage = argParser.usage;
+    var lines = usage.split('\n');
+    var regExp = RegExp(r'(\s*(-.+,\s)?--.+?)(\s+.*)$', caseSensitive: true, multiLine: false);
+    var res = lines.map((line) {
+      var match = regExp.firstMatch(line);
+      if (match.groupCount == 3 && match.group(1) != null && match.group(3) != null) {
+        var text = ColorText();
+        return text.green(match.group(1)).normal().text(match.group(3));
+      }
+      return line;
+    });
+
+    return res.join('\n');
   }
 
   void addGroupCommands() {
