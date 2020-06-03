@@ -132,6 +132,9 @@ class ConsoleKernel<T> extends CommandRunner<T> {
       _logger.error(e).trace('Call stack: \n$s');
     } finally {
       if (isExist) {
+        Console.showCursor();
+        Console.resetAll();
+        Console.eraseDisplay();
         exit(0);
       }
     }
