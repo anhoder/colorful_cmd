@@ -23,3 +23,7 @@
 ## 1.2.1
 
 - Fix the error when enter second page menu 
+
+## 1.3.0
+
+- Command add default command and update usage style.
