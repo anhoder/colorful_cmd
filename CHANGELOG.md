@@ -27,3 +27,7 @@
 ## 1.3.0
 
 - Command add default command and update usage style.
+
+## 1.3.1
+
+- Console kernel add exit flag
