@@ -31,3 +31,7 @@
 ## 1.3.1
 
 - Console kernel add exit flag
+
+## 1.3.2
+
+- Fix: show cursor when command exit
