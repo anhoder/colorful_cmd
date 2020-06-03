@@ -9,7 +9,9 @@ class RootCommand extends ICmd {
   String description = 'root command, without group';
 
   @override
-  List<Flag> get flags => null;
+  List<Flag> get flags => [
+    Flag('test', help: '测试标签')
+  ];
 
   @override
   List<ILogHandler> get logHandlers => null;

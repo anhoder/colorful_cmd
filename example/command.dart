@@ -6,6 +6,6 @@ void main(List<String> args) {
   var kernel = ConsoleKernel();
   kernel.addCommands([RootCommand()])
         .addGroup(TestGroup())
-        .setDefaultCommand(RootCommand())
+        // .setDefaultCommand(RootCommand())
         .run(args);
 }

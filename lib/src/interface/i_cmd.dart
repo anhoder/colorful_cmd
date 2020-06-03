@@ -156,11 +156,19 @@ abstract class ICmd<T> extends Command<T> {
     var length = argParser.usageLineLength;
     var usagePrefix = 'Usage: \n';
     var argUsage = '';
+    var regExp = RegExp(r'(\s*(-.+,\s)?--.+?)(\s+.*)$', caseSensitive: true, multiLine: false);
     argParser.usage.split('\n').forEach((line) {
+      var newLine = line;
+      var match = regExp.firstMatch(line);
+      if (match.groupCount == 3 && match.group(1) != null && match.group(3) != null) {
+        var text = ColorText();
+        print(match.group(1));
+        newLine = text.green(match.group(1)).normal().text(match.group(3)).toString();
+      }
       if (argUsage == '') {
-        argUsage = '  $line\n';
+        argUsage = '  $newLine\n';
       } else {
-        argUsage = '$argUsage  $line\n';
+        argUsage = '$argUsage  $newLine\n';
       }
     });
     argUsage += '\n';
