@@ -118,15 +118,22 @@ class ConsoleKernel<T> extends CommandRunner<T> {
 
   @override
   Future<T> run(Iterable<String> args) async {
+    var isExist = true;
     try {
       addGroupCommands();
-      return await super.run(args);
+      var res = await super.run(args);
+      if (res is bool) {
+        isExist = res;
+      }
+      return res;
     } on UsageException catch (e) {
       printError('\n$e');
     } catch (e, s) {
       _logger.error(e).trace('Call stack: \n$s');
     } finally {
-      exit(0);
+      if (isExist) {
+        exit(0);
+      }
     }
     return null;
   }
