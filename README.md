@@ -1,7 +1,18 @@
 A library for building a beautiful command line application in dart.
 
-## Dependency
+![GitHub repo size](https://img.shields.io/github/repo-size/AlanAlbert/colorful_cmd)
+![GitHub](https://img.shields.io/github/license/AlanAlbert/colorful_cmd)
+![Last Tag](https://badgen.net/github/tag/alanalbert/colorful_cmd)
+![GitHub last commit](https://badgen.net/github/last-commit/alanalbert/colorful_cmd)
 
+![Support](https://badgen.net/pub/dart-platform/colorful_cmd)
+![Pub Version](https://img.shields.io/pub/v/colorful_cmd)
+
+
+![GitHub stars](https://img.shields.io/github/stars/AlanAlbert/colorful_cmd?style=social)
+![GitHub forks](https://img.shields.io/github/forks/AlanAlbert/colorful_cmd?style=social)
+
+## Dependency
 
 * console
 * args
