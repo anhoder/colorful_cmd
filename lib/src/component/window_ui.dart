@@ -9,7 +9,8 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   ILang lang;
   List<String> menu;
-  List<String> Function(WindowUI) beforeEnterMenu;
+  Future<List<String>> Function(WindowUI) beforeEnterMenu;
+  Future<List<String>> Function(WindowUI) beforeNextPage;
   int selectIndex = 0;
   bool progressRainbow;
   int menuPage = 1;
@@ -23,6 +24,7 @@ class WindowUI extends BaseWindow {
   bool _doubleColumn;
   final List<_MenuItem> _menuStack = [];
   int _curMaxMenuRow;
+  bool _isListenKey = true;
 
   WindowUI(
       {this.showTitle = true,
@@ -35,6 +37,7 @@ class WindowUI extends BaseWindow {
       this.lang,
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
+      this.beforeNextPage,
       this.progressRainbow = true,
       this.doubleColumn,
       this.menuPageSize = 10})
@@ -129,14 +132,15 @@ class WindowUI extends BaseWindow {
     return this;
   }
 
-  void enterMenu(_) {
+  Future<void> enterMenu(_) async {
+    if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
     _menuStack.add(_MenuItem(menu, selectIndex, _menuTitle));
-    _earseMenu();
     _menuTitle = menu[selectIndex];
 
     if (_menuStack.length == 1 && selectIndex == menu.length - 1) {
+      _earseMenu();
       menu = [];
       selectIndex = 0;
       menuPage = 0;
@@ -150,7 +154,21 @@ class WindowUI extends BaseWindow {
       });
       _curMaxMenuRow = row - 1;
     } else {
-      menu = beforeEnterMenu == null ? [] : (beforeEnterMenu(this) ?? []);
+      _isListenKey = false;
+      var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
+      Console.moveCursor(row: row);
+      var timer = TimeDisplay();
+      timer.start();
+
+      menu = beforeEnterMenu == null ? [] : (await beforeEnterMenu(this) ?? []);
+      
+      timer.stop();
+      Console.moveCursor(row: row);
+      Console.eraseLine();
+      Console.adapter.echoMode = false;
+      _isListenKey = true;
+
+      _earseMenu();
       selectIndex = 0;
       menuPage = 1;
       _displayList();
@@ -158,6 +176,7 @@ class WindowUI extends BaseWindow {
   }
 
   void backMenu(_) {
+    if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (_menuStack.isEmpty) return;
     var menuItem = _menuStack.removeLast();
@@ -304,14 +323,33 @@ class WindowUI extends BaseWindow {
   }
 
   void _prePage() {
+    if (!_isListenKey) return;
     if (menuPage <= 1) return;
     menuPage--;
     _earseMenu();
     _displayList();
   }
 
-  void _nextPage() {
+  Future<void> _nextPage() async {
+    if (!_isListenKey) return;
     if (menuPage >= (menu.length / menuPageSize).ceil()) return;
+
+    _isListenKey = false;
+    var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
+    Console.moveCursor(row: row);
+    var timer = TimeDisplay();
+    timer.start();
+
+    var appendMenus = beforeNextPage == null ? <String>[] : (await beforeNextPage(this) ?? <String>[]);
+    
+    timer.stop();
+    _isListenKey = true;
+    Console.moveCursor(row: row);
+    Console.eraseLine();
+    Console.adapter.echoMode = false;
+
+
+    menu.addAll(appendMenus);
     menuPage++;
     _earseMenu();
     _displayList();
@@ -326,6 +364,7 @@ class WindowUI extends BaseWindow {
   }
 
   void _moveDown(_) {
+    if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
     if (_doubleColumn) {
@@ -350,6 +389,7 @@ class WindowUI extends BaseWindow {
   }
 
   void _moveUp(_) {
+    if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
     if (_doubleColumn) {
@@ -374,6 +414,7 @@ class WindowUI extends BaseWindow {
   }
 
   void _moveLeft(_) {
+    if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (!_doubleColumn || selectIndex % 2 == 0 || selectIndex - 1 < 0) {
       return;
@@ -384,6 +425,7 @@ class WindowUI extends BaseWindow {
   }
 
   void _moveRight(_) {
+    if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (!_doubleColumn ||
         selectIndex % 2 != 0 ||

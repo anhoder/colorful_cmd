@@ -25,18 +25,24 @@ void main(List<String> args) {
       ],
       name: 'WIN_UI',
       showWelcome: true,
-      beforeEnterMenu: (ui) {
-        if (ui.curMenuStackLevel != 1) return [];
+      beforeEnterMenu: (ui) async {
+        if (ui.curMenuStackLevel != 1) return Future.value([]);
         switch (ui.selectIndex) {
           case 0:
-            return ['Alipay', 'WeChat Pay'];
+            await Future.delayed(Duration(seconds: 2));
+            return Future.value(['Alipay', 'WeChat Pay']);
           case 1:
             Console.moveCursor(column: ui.startColumn, row: ui.startRow);
             Console.write(ColorText().blue('This is Collection').toString());
-            return [];
+            return Future.value([]);
           default:
-            return [];
+            return Future.value([]);
         }
+      },
+      beforeNextPage: (ui) async {
+        await Future.delayed(Duration(seconds: 1));
+        if (ui.menuPage == 2) return ['测试'];
+        return [];
       },
       menuPageSize: 10,
       // doubleColumn: false,
