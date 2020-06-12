@@ -35,3 +35,7 @@
 ## 1.3.2
 
 - Fix: show cursor when command exit
+
+## 1.4.0
+
+- WindowUI add `beforeNextPage` method
