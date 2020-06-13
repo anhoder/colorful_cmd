@@ -41,7 +41,11 @@ void main(List<String> args) {
       },
       beforeNextPage: (ui) async {
         await Future.delayed(Duration(seconds: 1));
-        if (ui.menuPage == 1) return ['测试'];
+        if (ui.menuPage == 1)  {
+          var help = ui.menu.removeLast();
+          ui.menu.addAll(['exampleTest', help]);
+          return [];
+        }
         return [];
       },
       menuPageSize: 10,
