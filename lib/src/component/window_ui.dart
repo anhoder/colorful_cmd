@@ -22,7 +22,7 @@ class WindowUI extends BaseWindow {
   int startRow;
   int startColumn;
   bool _doubleColumn;
-  final List<_MenuItem> _menuStack = [];
+  final List<_MenuItem> menuStack = [];
   int _curMaxMenuRow;
   bool _isListenKey = true;
 
@@ -63,7 +63,7 @@ class WindowUI extends BaseWindow {
     Console.hideCursor();
   }
 
-  int get curMenuStackLevel => _menuStack.length;
+  int get curMenuStackLevel => menuStack.length;
 
   @override
   void draw() {
@@ -136,10 +136,10 @@ class WindowUI extends BaseWindow {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
-    _menuStack.add(_MenuItem(menu, selectIndex, _menuTitle));
+    menuStack.add(_MenuItem(menu, selectIndex, _menuTitle));
     _menuTitle = menu[selectIndex];
 
-    if (_menuStack.length == 1 && selectIndex == menu.length - 1) {
+    if (menuStack.length == 1 && selectIndex == menu.length - 1) {
       _earseMenu();
       menu = [];
       selectIndex = 0;
@@ -178,8 +178,8 @@ class WindowUI extends BaseWindow {
   void backMenu(_) {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
-    if (_menuStack.isEmpty) return;
-    var menuItem = _menuStack.removeLast();
+    if (menuStack.isEmpty) return;
+    var menuItem = menuStack.removeLast();
 
     _earseMenu();
     menu = menuItem.list;

@@ -39,3 +39,7 @@
 ## 1.4.0
 
 - WindowUI add `beforeNextPage` method
+
+## 1.4.1
+
+- WindowUI expose menuStack property
