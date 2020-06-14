@@ -43,3 +43,7 @@
 ## 1.4.1
 
 - WindowUI expose menuStack property
+
+## 1.4.2
+
+- WindowUI expose earseMenu method

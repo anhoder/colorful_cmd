@@ -24,6 +24,7 @@ void main(List<String> args) {
         'Test2'
       ],
       name: 'WIN_UI',
+      // disableTimeDisplay: true,
       showWelcome: true,
       beforeEnterMenu: (ui) async {
         if (ui.curMenuStackLevel != 1) return Future.value([]);

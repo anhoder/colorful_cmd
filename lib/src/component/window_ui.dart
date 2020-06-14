@@ -16,6 +16,7 @@ class WindowUI extends BaseWindow {
   int menuPage = 1;
   int menuPageSize = 10;
   bool doubleColumn;
+  bool disableTimeDisplay = false;
 
   String _menuTitle;
   bool _hasShownWelcome = false;
@@ -38,6 +39,7 @@ class WindowUI extends BaseWindow {
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
       this.beforeNextPage,
+      this.disableTimeDisplay = false,
       this.progressRainbow = true,
       this.doubleColumn,
       this.menuPageSize = 10})
@@ -140,7 +142,7 @@ class WindowUI extends BaseWindow {
     _menuTitle = menu[selectIndex];
 
     if (menuStack.length == 1 && selectIndex == menu.length - 1) {
-      _earseMenu();
+      earseMenu();
       menu = [];
       selectIndex = 0;
       menuPage = 0;
@@ -157,18 +159,21 @@ class WindowUI extends BaseWindow {
       _isListenKey = false;
       var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
       Console.moveCursor(row: row);
-      var timer = TimeDisplay();
-      timer.start();
+      TimeDisplay timer;
+      if (!disableTimeDisplay) {
+        timer = TimeDisplay();
+        timer.start();
+      }
 
       menu = beforeEnterMenu == null ? [] : (await beforeEnterMenu(this) ?? []);
       
-      timer.stop();
+      if (!disableTimeDisplay && timer != null) timer.stop();
       Console.moveCursor(row: row);
       Console.eraseLine();
       Console.adapter.echoMode = false;
       _isListenKey = true;
 
-      _earseMenu();
+      earseMenu();
       selectIndex = 0;
       menuPage = 1;
       _displayList();
@@ -181,7 +186,7 @@ class WindowUI extends BaseWindow {
     if (menuStack.isEmpty) return;
     var menuItem = menuStack.removeLast();
 
-    _earseMenu();
+    earseMenu();
     menu = menuItem.list;
     _curMaxMenuRow = _doubleColumn
         ? startRow + (menu.length / 2).ceil() - 1
@@ -189,11 +194,11 @@ class WindowUI extends BaseWindow {
     selectIndex = menuItem.index;
     menuPage = ((selectIndex + 1) / menuPageSize).ceil();
     _menuTitle = menuItem.menuTitle;
-    _earseMenu();
+    earseMenu();
     _displayList();
   }
 
-  void _earseMenu() {
+  void earseMenu() {
     _repeatFunction((i) {
       Console.moveCursor(row: startRow + i - 1);
       Console.eraseLine();
@@ -326,7 +331,7 @@ class WindowUI extends BaseWindow {
     if (!_isListenKey) return;
     if (menuPage <= 1) return;
     menuPage--;
-    _earseMenu();
+    earseMenu();
     _displayList();
   }
 
@@ -337,12 +342,15 @@ class WindowUI extends BaseWindow {
     _isListenKey = false;
     var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
     Console.moveCursor(row: row);
-    var timer = TimeDisplay();
-    timer.start();
+    TimeDisplay timer;
+    if (!disableTimeDisplay) {
+      timer = TimeDisplay();
+      timer.start();
+    }
 
     var appendMenus = beforeNextPage == null ? <String>[] : (await beforeNextPage(this) ?? <String>[]);
     
-    timer.stop();
+    if (!disableTimeDisplay && timer != null) timer.stop();
     _isListenKey = true;
     Console.moveCursor(row: row);
     Console.eraseLine();
@@ -351,7 +359,7 @@ class WindowUI extends BaseWindow {
 
     menu.addAll(appendMenus);
     menuPage++;
-    _earseMenu();
+    earseMenu();
     _displayList();
   }
 
