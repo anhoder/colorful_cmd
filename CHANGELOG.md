@@ -47,3 +47,7 @@
 ## 1.4.2
 
 - WindowUI expose earseMenu method
+
+## 1.4.3
+
+- WindowUI update earseMenu time

@@ -140,9 +140,9 @@ class WindowUI extends BaseWindow {
     if (selectIndex >= menu.length) return;
     menuStack.add(_MenuItem(menu, selectIndex, _menuTitle));
     _menuTitle = menu[selectIndex];
+    earseMenu();
 
     if (menuStack.length == 1 && selectIndex == menu.length - 1) {
-      earseMenu();
       menu = [];
       selectIndex = 0;
       menuPage = 0;
@@ -173,7 +173,6 @@ class WindowUI extends BaseWindow {
       Console.adapter.echoMode = false;
       _isListenKey = true;
 
-      earseMenu();
       selectIndex = 0;
       menuPage = 1;
       _displayList();
