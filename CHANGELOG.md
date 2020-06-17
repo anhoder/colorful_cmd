@@ -51,3 +51,7 @@
 ## 1.4.3
 
 - WindowUI update earseMenu time
+
+## 1.4.4
+
+- WindowUI expose displayMenuTitle method and menuTitle property

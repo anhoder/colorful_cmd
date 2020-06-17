@@ -18,7 +18,7 @@ class WindowUI extends BaseWindow {
   bool doubleColumn;
   bool disableTimeDisplay = false;
 
-  String _menuTitle;
+  String menuTitle;
   bool _hasShownWelcome = false;
   int startRow;
   int startColumn;
@@ -54,7 +54,7 @@ class WindowUI extends BaseWindow {
       this.primaryColor = primaryColor;
     }
 
-    if (defaultMenuTitle != null) _menuTitle = defaultMenuTitle;
+    if (defaultMenuTitle != null) menuTitle = defaultMenuTitle;
 
     if (menu == null) {
       menu = ['Help'];
@@ -138,16 +138,16 @@ class WindowUI extends BaseWindow {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
-    menuStack.add(_MenuItem(menu, selectIndex, _menuTitle));
-    _menuTitle = menu[selectIndex];
+    menuStack.add(_MenuItem(menu, selectIndex, menuTitle));
+    menuTitle = menu[selectIndex];
     earseMenu();
 
     if (menuStack.length == 1 && selectIndex == menu.length - 1) {
       menu = [];
       selectIndex = 0;
       menuPage = 0;
-      _menuTitle = 'Help';
-      _displayMenuTitle();
+      menuTitle = 'Help';
+      displayMenuTitle();
       var row = startRow;
       localHelpInfo(lang).forEach((element) {
         Console.moveCursor(row: row, column: startColumn);
@@ -192,7 +192,7 @@ class WindowUI extends BaseWindow {
         : startRow + menu.length - 1;
     selectIndex = menuItem.index;
     menuPage = ((selectIndex + 1) / menuPageSize).ceil();
-    _menuTitle = menuItem.menuTitle;
+    menuTitle = menuItem.menuTitle;
     earseMenu();
     _displayList();
   }
@@ -249,9 +249,9 @@ class WindowUI extends BaseWindow {
     Console.resetBackgroundColor();
   }
 
-  void _displayMenuTitle() {
-    var menuTitle = toLocal(lang, _menuTitle);
-    menuTitle = menuTitle.length > 50 ? menuTitle.substring(0, 50) : menuTitle;
+  void displayMenuTitle() {
+    var title = toLocal(lang, menuTitle);
+    title = title.length > 50 ? title.substring(0, 50) : title;
     if (showTitle && startRow > 2) {
       Console.resetAll();
       var row = startRow > 4 ? startRow - 3 : 2;
@@ -259,14 +259,14 @@ class WindowUI extends BaseWindow {
       Console.setTextColor(Color.GREEN.id,
           bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
       Console.eraseLine();
-      Console.write(menuTitle);
+      Console.write(title);
     } else if (!showTitle && startRow > 1) {
       var row = startRow > 3 ? startRow - 3 : 2;
       Console.moveCursor(row: row, column: startColumn);
       Console.setTextColor(Color.GREEN.id,
           bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
       Console.eraseLine();
-      Console.write(menuTitle);
+      Console.write(title);
     }
   }
 
@@ -281,7 +281,7 @@ class WindowUI extends BaseWindow {
         ? startRow + (menu.length / 2).ceil() - 1
         : startRow + menu.length - 1;
 
-    _displayMenuTitle();
+    displayMenuTitle();
 
     Console.resetAll();
     Console.setTextColor(Color.WHITE.id, bright: false, xterm: false);
