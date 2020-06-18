@@ -55,3 +55,7 @@
 ## 1.4.4
 
 - WindowUI expose displayMenuTitle method and menuTitle property
+
+## 1.4.5
+
+- update WindowUI enterMenu method

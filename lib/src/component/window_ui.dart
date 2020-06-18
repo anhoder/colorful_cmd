@@ -139,10 +139,10 @@ class WindowUI extends BaseWindow {
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
     menuStack.add(_MenuItem(menu, selectIndex, menuTitle));
-    menuTitle = menu[selectIndex];
-    earseMenu();
+    var mTitle = menu[selectIndex];
 
     if (menuStack.length == 1 && selectIndex == menu.length - 1) {
+      earseMenu();
       menu = [];
       selectIndex = 0;
       menuPage = 0;
@@ -166,12 +166,15 @@ class WindowUI extends BaseWindow {
       }
 
       menu = beforeEnterMenu == null ? [] : (await beforeEnterMenu(this) ?? []);
-      
+
       if (!disableTimeDisplay && timer != null) timer.stop();
       Console.moveCursor(row: row);
       Console.eraseLine();
       Console.adapter.echoMode = false;
       _isListenKey = true;
+
+      earseMenu();
+      menuTitle = mTitle;
 
       selectIndex = 0;
       menuPage = 1;
