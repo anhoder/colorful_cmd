@@ -17,6 +17,7 @@ class WindowUI extends BaseWindow {
   int menuPageSize = 10;
   bool doubleColumn;
   bool disableTimeDisplay = false;
+  dynamic pageData;
 
   String menuTitle;
   bool _hasShownWelcome = false;
