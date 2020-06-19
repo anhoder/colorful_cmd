@@ -139,7 +139,7 @@ class WindowUI extends BaseWindow {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (selectIndex >= menu.length) return;
-    menuStack.add(_MenuItem(menu, selectIndex, menuTitle));
+    menuStack.add(_MenuItem(menu, selectIndex, menuTitle, pageData));
     var mTitle = menu[selectIndex];
 
     if (menuStack.length == 1 && selectIndex == menu.length - 1) {
@@ -197,6 +197,7 @@ class WindowUI extends BaseWindow {
     selectIndex = menuItem.index;
     menuPage = ((selectIndex + 1) / menuPageSize).ceil();
     menuTitle = menuItem.menuTitle;
+    pageData = menuItem.curMenuData;
     earseMenu();
     _displayList();
   }

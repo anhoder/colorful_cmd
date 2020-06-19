@@ -58,4 +58,4 @@
 
 ## 1.4.5
 
-- update WindowUI enterMenu method
+- update WindowUI enterMenu method、add pageData property
