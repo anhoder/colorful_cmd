@@ -1,7 +1,4 @@
-import 'dart:async';
-
-import 'package:colorful_cmd/utils.dart';
-import 'package:console/console.dart';
+part of component;
 
 /// code from console/TImerDisplay, optimize ui in windows
 class Loader {

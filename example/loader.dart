@@ -1,4 +1,5 @@
-import 'package:colorful_cmd/src/component/loader.dart';
+
+import 'package:colorful_cmd/component.dart';
 
 void main(List<String> args) {
   var loader = Loader();
