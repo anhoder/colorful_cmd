@@ -59,3 +59,7 @@
 ## 1.4.5
 
 - update WindowUI enterMenu method、add pageData property
+
+## 1.4.6
+
+- update WindowUI displayItem
