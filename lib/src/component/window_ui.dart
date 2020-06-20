@@ -11,6 +11,7 @@ class WindowUI extends BaseWindow {
   List<String> menu;
   Future<List<String>> Function(WindowUI) beforeEnterMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
+  dynamic Function(WindowUI) init;
   int selectIndex = 0;
   bool progressRainbow;
   int menuPage = 1;
@@ -43,6 +44,7 @@ class WindowUI extends BaseWindow {
       this.disableTimeDisplay = false,
       this.progressRainbow = true,
       this.doubleColumn,
+      this.init,
       this.menuPageSize = 10})
       : super(name) {
     if ((!(primaryColor is String) || primaryColor != 'random') &&
@@ -123,6 +125,7 @@ class WindowUI extends BaseWindow {
     Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(_moveRight);
     Keyboard.bindKeys([KeyName.ENTER, 'n', 'N']).listen(enterMenu);
     Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
+    init(this);
   }
 
   WindowUI bindKey(String key, void Function(String key) func) {
