@@ -125,7 +125,7 @@ class WindowUI extends BaseWindow {
     Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(_moveRight);
     Keyboard.bindKeys([KeyName.ENTER, 'n', 'N']).listen(enterMenu);
     Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
-    init(this);
+    if (init != null) init(this);
   }
 
   WindowUI bindKey(String key, void Function(String key) func) {
@@ -175,6 +175,7 @@ class WindowUI extends BaseWindow {
       Console.moveCursor(row: row);
       Console.eraseLine();
       Console.adapter.echoMode = false;
+      Console.adapter.lineMode = false;
       _isListenKey = true;
 
       earseMenu();
@@ -362,6 +363,7 @@ class WindowUI extends BaseWindow {
     Console.moveCursor(row: row);
     Console.eraseLine();
     Console.adapter.echoMode = false;
+    Console.adapter.lineMode = false;
 
 
     menu.addAll(appendMenus);

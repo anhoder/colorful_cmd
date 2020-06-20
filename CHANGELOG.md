@@ -63,3 +63,7 @@
 ## 1.4.6
 
 - update WindowUI displayItem
+
+## 1.4.7
+
+- add Loader component
