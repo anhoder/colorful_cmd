@@ -67,3 +67,7 @@
 ## 1.4.7
 
 - add Loader component
+
+## 1.4.8
+
+- WindowUI use loader

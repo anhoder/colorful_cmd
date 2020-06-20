@@ -163,9 +163,9 @@ class WindowUI extends BaseWindow {
       _isListenKey = false;
       var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
       Console.moveCursor(row: row);
-      TimeDisplay timer;
+      Loader timer;
       if (!disableTimeDisplay) {
-        timer = TimeDisplay();
+        timer = Loader();
         timer.start();
       }
 
@@ -350,9 +350,9 @@ class WindowUI extends BaseWindow {
     _isListenKey = false;
     var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
     Console.moveCursor(row: row);
-    TimeDisplay timer;
+    Loader timer;
     if (!disableTimeDisplay) {
-      timer = TimeDisplay();
+      timer = Loader();
       timer.start();
     }
 
