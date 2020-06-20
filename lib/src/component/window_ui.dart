@@ -327,7 +327,7 @@ class WindowUI extends BaseWindow {
       Console.write(' => ${index}. ${menuName}');
       Console.resetAll();
     } else {
-      Console.write('    ${index}. ${menuName}');
+      Console.write(ColorText().normal().toString() + '    ${index}. ${menuName}');
     }
   }
 
