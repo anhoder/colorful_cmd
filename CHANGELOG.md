@@ -71,3 +71,7 @@
 ## 1.4.8
 
 - WindowUI use loader
+
+## 1.5.0
+
+- optimize WindowUI

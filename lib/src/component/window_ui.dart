@@ -123,7 +123,7 @@ class WindowUI extends BaseWindow {
     Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(_moveDown);
     Keyboard.bindKeys([KeyName.LEFT, 'h', 'H']).listen(_moveLeft);
     Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(_moveRight);
-    Keyboard.bindKeys([KeyName.ENTER, 'n', 'N']).listen(enterMenu);
+    Keyboard.bindKeys([KeyName.ENTER, KeyName.WIN_ENTER, 'n', 'N']).listen(enterMenu);
     Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
     if (init != null) init(this);
   }

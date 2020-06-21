@@ -33,7 +33,7 @@ class Loader {
     if (_isStart) {
       var msg = '(${_watch.elapsed.inSeconds}s)';
       _lastMsg = msg;
-      Console.write(msg);
+      // Console.write(msg);
       _isStart = false;
     } else {
       Console.moveCursorBack(_lastMsg.length);

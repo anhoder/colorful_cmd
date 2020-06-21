@@ -11,6 +11,7 @@ abstract class KeyName {
   static const String PAGE_DOWN = 'page down';
   static const String PAGE_UP = 'page up';
   static String get ENTER => ascii.decode([10]);
+  static String get WIN_ENTER => ascii.decode([13]);
   static String get BACKSPACE => ascii.decode([127]);
   static String get ESC => ascii.decode([27]);
   static String get TAB => ascii.decode([9]);
