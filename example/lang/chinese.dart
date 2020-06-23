@@ -18,7 +18,8 @@ class Chinese implements ILang {
         'Main Menu': '主菜单',
         'WIN_UI': '窗口UI',
         'Alipay': '支付宝',
-        'WeChat Pay': '微信支付'
+        'WeChat Pay': '微信支付',
+        'Loading': '加载中',
       };
 
   @override

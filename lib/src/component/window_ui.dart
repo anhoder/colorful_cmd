@@ -9,8 +9,10 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   ILang lang;
   List<String> menu;
-  Future<List<String>> Function(WindowUI) beforeEnterMenu;
+  Future<dynamic> Function(WindowUI) beforeEnterMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
+  Future Function(WindowUI) beforePrePage;
+  void Function(WindowUI) quit;
   dynamic Function(WindowUI) init;
   int selectIndex = 0;
   bool progressRainbow;
@@ -45,6 +47,8 @@ class WindowUI extends BaseWindow {
       this.progressRainbow = true,
       this.doubleColumn,
       this.init,
+      this.quit,
+      this.beforePrePage,
       this.menuPageSize = 10})
       : super(name) {
     if ((!(primaryColor is String) || primaryColor != 'random') &&
@@ -119,10 +123,10 @@ class WindowUI extends BaseWindow {
   @override
   void initialize() {
     Keyboard.bindKeys(['q', 'Q']).listen(_quit);
-    Keyboard.bindKeys([KeyName.UP, 'k', 'K']).listen(_moveUp);
-    Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(_moveDown);
-    Keyboard.bindKeys([KeyName.LEFT, 'h', 'H']).listen(_moveLeft);
-    Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(_moveRight);
+    Keyboard.bindKeys([KeyName.UP, 'k', 'K']).listen(moveUp);
+    Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(moveDown);
+    Keyboard.bindKeys([KeyName.LEFT, 'h', 'H']).listen(moveLeft);
+    Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(moveRight);
     Keyboard.bindKeys([KeyName.ENTER, KeyName.WIN_ENTER, 'n', 'N']).listen(enterMenu);
     Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
     if (init != null) init(this);
@@ -139,9 +143,9 @@ class WindowUI extends BaseWindow {
   }
 
   Future<void> enterMenu(_) async {
-    if (!_isListenKey) return;
-    if (showWelcome && !_hasShownWelcome) return;
-    if (selectIndex >= menu.length) return;
+    if (!_isListenKey) return Future.value();
+    if (showWelcome && !_hasShownWelcome) return Future.value();
+    if (selectIndex >= menu.length) return Future.value();
     menuStack.add(_MenuItem(menu, selectIndex, menuTitle, pageData));
     var mTitle = menu[selectIndex];
 
@@ -161,29 +165,32 @@ class WindowUI extends BaseWindow {
       _curMaxMenuRow = row - 1;
     } else {
       _isListenKey = false;
-      var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
-      Console.moveCursor(row: row);
-      Loader timer;
-      if (!disableTimeDisplay) {
-        timer = Loader();
-        timer.start();
-      }
+      var originMenuTitle = menuTitle;
+      menuTitle = toLocal(lang, 'Loading') + '...';
+      displayMenuTitle();
 
-      menu = beforeEnterMenu == null ? [] : (await beforeEnterMenu(this) ?? []);
 
-      if (!disableTimeDisplay && timer != null) timer.stop();
-      Console.moveCursor(row: row);
-      Console.eraseLine();
+      dynamic tmpMenu = beforeEnterMenu == null ? false : await beforeEnterMenu(this);
+
+      menuTitle = originMenuTitle;
+      displayMenuTitle();
       Console.adapter.echoMode = false;
       Console.adapter.lineMode = false;
       _isListenKey = true;
 
-      earseMenu();
+      if (!(tmpMenu is List)) {
+        menuStack.removeLast();
+        return Future.value();
+      }
+
+      menu = List<String>.from(tmpMenu);
+      if (menu.isNotEmpty) earseMenu();
       menuTitle = mTitle;
 
       selectIndex = 0;
       menuPage = 1;
       _displayList();
+      return Future.value();
     }
   }
 
@@ -298,11 +305,11 @@ class WindowUI extends BaseWindow {
         min(menu.length, menuPage * menuPageSize));
     var lines = _doubleColumn ? (curMenus.length / 2).ceil() : curMenus.length;
     for (var i = 0; i < lines; i++) {
-      _displayLine(i);
+      displayLine(i);
     }
   }
 
-  void _displayLine(int line) {
+  void displayLine(int line) {
     Console.write('\r');
     var index = _doubleColumn
         ? line * 2 + (menuPage - 1) * menuPageSize
@@ -335,44 +342,44 @@ class WindowUI extends BaseWindow {
     }
   }
 
-  void _prePage() {
-    if (!_isListenKey) return;
-    if (menuPage <= 1) return;
+  Future<void> _prePage() async {
+    if (beforePrePage != null) await beforePrePage(this);
+    if (!_isListenKey) return Future.value();
+    if (menuPage <= 1) return Future.value();
     menuPage--;
     earseMenu();
     _displayList();
+    return Future.value();
   }
 
   Future<void> _nextPage() async {
-    if (!_isListenKey) return;
-    if (menuPage >= (menu.length / menuPageSize).ceil()) return;
+    if (!_isListenKey) return Future.value();
+    if (menuPage >= (menu.length / menuPageSize).ceil()) return Future.value();
 
     _isListenKey = false;
-    var row = startRow > (showTitle ? 4 : 3) ? startRow - 3 : 2;
-    Console.moveCursor(row: row);
-    Loader timer;
-    if (!disableTimeDisplay) {
-      timer = Loader();
-      timer.start();
-    }
+
+    var originMenuTitle = menuTitle;
+      menuTitle = toLocal(lang, 'Loading') + '...';
+      displayMenuTitle();
 
     var appendMenus = beforeNextPage == null ? <String>[] : (await beforeNextPage(this) ?? <String>[]);
     
-    if (!disableTimeDisplay && timer != null) timer.stop();
-    _isListenKey = true;
-    Console.moveCursor(row: row);
-    Console.eraseLine();
     Console.adapter.echoMode = false;
     Console.adapter.lineMode = false;
+    menuTitle = originMenuTitle;
+    displayMenuTitle();
+    _isListenKey = true;
 
 
     menu.addAll(appendMenus);
     menuPage++;
     earseMenu();
     _displayList();
+    return Future.value();
   }
 
   void _quit(_) {
+    if (quit != null) quit(this);
     Console.showCursor();
     close();
     Console.resetAll();
@@ -380,7 +387,7 @@ class WindowUI extends BaseWindow {
     exit(0);
   }
 
-  void _moveDown(_) {
+  void moveDown(_) {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
@@ -400,12 +407,12 @@ class WindowUI extends BaseWindow {
     if (selectIndex >= menuPage * menuPageSize) {
       _nextPage();
     } else {
-      _displayLine(curLine - 1);
-      _displayLine(curLine);
+      displayLine(curLine - 1);
+      displayLine(curLine);
     }
   }
 
-  void _moveUp(_) {
+  void moveUp(_) {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
@@ -425,12 +432,12 @@ class WindowUI extends BaseWindow {
     if (selectIndex < (menuPage - 1) * menuPageSize) {
       _prePage();
     } else {
-      _displayLine(curLine + 1);
-      _displayLine(curLine);
+      displayLine(curLine + 1);
+      displayLine(curLine);
     }
   }
 
-  void _moveLeft(_) {
+  void moveLeft(_) {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (!_doubleColumn || selectIndex % 2 == 0 || selectIndex - 1 < 0) {
@@ -438,10 +445,10 @@ class WindowUI extends BaseWindow {
     }
     selectIndex -= 1;
     var curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
-    _displayLine(curLine);
+    displayLine(curLine);
   }
 
-  void _moveRight(_) {
+  void moveRight(_) {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (!_doubleColumn ||
@@ -451,6 +458,6 @@ class WindowUI extends BaseWindow {
     }
     selectIndex += 1;
     var curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
-    _displayLine(curLine);
+    displayLine(curLine);
   }
 }

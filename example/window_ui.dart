@@ -33,11 +33,12 @@ void main(List<String> args) {
             await Future.delayed(Duration(seconds: 2));
             return Future.value(['Alipay', 'WeChat Pay']);
           case 1:
+            ui.earseMenu();
             Console.moveCursor(column: ui.startColumn, row: ui.startRow);
             Console.write(ColorText().blue('This is Collection').toString());
             return Future.value([]);
           default:
-            return Future.value([]);
+            return Future.value(false);
         }
       },
       beforeNextPage: (ui) async {
