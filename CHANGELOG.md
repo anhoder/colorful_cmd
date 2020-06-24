@@ -79,3 +79,7 @@
 ## 1.5.1
 
 - optimize WindowUI
+
+## 1.5.2
+
+- optimize WindowUI
