@@ -203,8 +203,8 @@ class WindowUI extends BaseWindow {
     earseMenu();
     menu = menuItem.list;
     _curMaxMenuRow = _doubleColumn
-        ? startRow + (menu.length / 2).ceil() - 1
-        : startRow + menu.length - 1;
+        ? startRow + (menuPageSize / 2).ceil() - 1
+        : startRow + menuPageSize - 1;
     selectIndex = menuItem.index;
     menuPage = ((selectIndex + 1) / menuPageSize).ceil();
     menuTitle = menuItem.menuTitle;
@@ -294,8 +294,8 @@ class WindowUI extends BaseWindow {
     startColumn =
         _doubleColumn ? ((width - 60) / 2).floor() : ((width - 20) / 2).floor();
     _curMaxMenuRow = _doubleColumn
-        ? startRow + (menu.length / 2).ceil() - 1
-        : startRow + menu.length - 1;
+        ? startRow + (menuPageSize / 2).ceil() - 1
+        : startRow + menuPageSize - 1;
 
     displayMenuTitle();
 
