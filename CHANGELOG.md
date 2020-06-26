@@ -79,3 +79,7 @@
 ## 1.5.1
 
 - optimize WindowUI
+
+## 1.5.2
+
+- WindowUI expose prePage, nextPage, displayList
