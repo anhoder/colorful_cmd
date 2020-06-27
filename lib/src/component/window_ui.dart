@@ -9,6 +9,7 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   ILang lang;
   List<String> menu;
+  void Function(WindowUI) enterMain;
   Future<dynamic> Function(WindowUI) beforeEnterMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
   Future Function(WindowUI) beforePrePage;
@@ -30,6 +31,7 @@ class WindowUI extends BaseWindow {
   final List<_MenuItem> menuStack = [];
   int _curMaxMenuRow;
   bool _isListenKey = true;
+  int _enterFlag = 0;
 
   WindowUI(
       {this.showTitle = true,
@@ -47,6 +49,7 @@ class WindowUI extends BaseWindow {
       this.progressRainbow = true,
       this.doubleColumn,
       this.init,
+      this.enterMain,
       this.quit,
       this.beforePrePage,
       this.menuPageSize = 10})
@@ -116,7 +119,11 @@ class WindowUI extends BaseWindow {
         }
       });
     } else {
+      _enterFlag < 1 ? _enterFlag++ : null;
       displayList();
+      if (_enterFlag == 1) {
+        enterMain(this);
+      }
     }
   }
 
