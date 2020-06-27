@@ -91,3 +91,7 @@
 ## 1.5.4
 
 - WindowUI add enter hook
+
+## 1.5.5
+
+- add command notifier
