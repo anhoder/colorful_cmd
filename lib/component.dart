@@ -16,3 +16,8 @@ part 'src/component/base_window.dart';
 part 'src/component/windows_ui_help.dart';
 part 'src/component/key_name.dart';
 part 'src/component/loader.dart';
+part 'src/interface/i_notifier.dart';
+part 'src/component/notifier_proxy.dart';
+part 'src/component/terminal_notifier.dart';
+part 'src/component/apple_script_notifier.dart';
+part 'src/component/notify_send_notifier.dart';
