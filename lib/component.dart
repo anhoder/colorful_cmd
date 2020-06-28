@@ -16,3 +16,4 @@ part 'src/component/base_window.dart';
 part 'src/component/windows_ui_help.dart';
 part 'src/component/key_name.dart';
 part 'src/component/loader.dart';
+part 'src/component/keys.dart';

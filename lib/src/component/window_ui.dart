@@ -122,23 +122,23 @@ class WindowUI extends BaseWindow {
 
   @override
   void initialize() {
-    Keyboard.bindKeys(['q', 'Q']).listen(_quit);
-    Keyboard.bindKeys([KeyName.UP, 'k', 'K']).listen(moveUp);
-    Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(moveDown);
-    Keyboard.bindKeys([KeyName.LEFT, 'h', 'H']).listen(moveLeft);
-    Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(moveRight);
-    Keyboard.bindKeys([KeyName.ENTER, KeyName.WIN_ENTER, 'n', 'N']).listen(enterMenu);
-    Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
+    Keys.bindKeys(['q', 'Q']).listen(_quit);
+    Keys.bindKeys([KeyName.UP, 'k', 'K']).listen(moveUp);
+    Keys.bindKeys([KeyName.DOWN, 'j', 'J']).listen(moveDown);
+    Keys.bindKeys([KeyName.LEFT, 'h', 'H']).listen(moveLeft);
+    Keys.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(moveRight);
+    Keys.bindKeys([KeyName.ENTER, KeyName.WIN_ENTER, 'n', 'N']).listen(enterMenu);
+    Keys.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
     if (init != null) init(this);
   }
 
   WindowUI bindKey(String key, void Function(String key) func) {
-    Keyboard.bindKey(key).listen(func);
+    Keys.bindKey(key).listen(func);
     return this;
   }
 
   WindowUI bindKeys(List<String> keys, void Function(String key) func) {
-    Keyboard.bindKeys(keys).listen(func);
+    Keys.bindKeys(keys).listen(func);
     return this;
   }
 
