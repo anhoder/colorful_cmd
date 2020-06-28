@@ -95,3 +95,7 @@
 ## 1.5.5
 
 - add command notifier
+
+## 1.5.6
+
+- fix invalid chars
