@@ -79,3 +79,19 @@
 ## 1.5.1
 
 - optimize WindowUI
+
+## 1.5.2
+
+- optimize WindowUI
+
+## 1.5.3
+
+- WindowUI expose prePage, nextPage, displayList
+
+## 1.5.4
+
+- WindowUI add enter hook
+
+## 1.5.5
+
+- add command notifier

@@ -9,6 +9,7 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   ILang lang;
   List<String> menu;
+  void Function(WindowUI) enterMain;
   Future<dynamic> Function(WindowUI) beforeEnterMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
   Future Function(WindowUI) beforePrePage;
@@ -30,6 +31,7 @@ class WindowUI extends BaseWindow {
   final List<_MenuItem> menuStack = [];
   int _curMaxMenuRow;
   bool _isListenKey = true;
+  int _enterFlag = 0;
 
   WindowUI(
       {this.showTitle = true,
@@ -47,6 +49,7 @@ class WindowUI extends BaseWindow {
       this.progressRainbow = true,
       this.doubleColumn,
       this.init,
+      this.enterMain,
       this.quit,
       this.beforePrePage,
       this.menuPageSize = 10})
@@ -116,7 +119,11 @@ class WindowUI extends BaseWindow {
         }
       });
     } else {
-      _displayList();
+      _enterFlag < 1 ? _enterFlag++ : null;
+      displayList();
+      if (_enterFlag == 1) {
+        enterMain(this);
+      }
     }
   }
 
@@ -189,7 +196,7 @@ class WindowUI extends BaseWindow {
 
       selectIndex = 0;
       menuPage = 1;
-      _displayList();
+      displayList();
       return Future.value();
     }
   }
@@ -203,14 +210,14 @@ class WindowUI extends BaseWindow {
     earseMenu();
     menu = menuItem.list;
     _curMaxMenuRow = _doubleColumn
-        ? startRow + (menu.length / 2).ceil() - 1
-        : startRow + menu.length - 1;
+        ? startRow + (menuPageSize / 2).ceil() - 1
+        : startRow + menuPageSize - 1;
     selectIndex = menuItem.index;
     menuPage = ((selectIndex + 1) / menuPageSize).ceil();
     menuTitle = menuItem.menuTitle;
     pageData = menuItem.curMenuData;
     earseMenu();
-    _displayList();
+    displayList();
   }
 
   void earseMenu() {
@@ -286,7 +293,7 @@ class WindowUI extends BaseWindow {
     }
   }
 
-  void _displayList() {
+  void displayList() {
     var width = Console.columns;
     var height = Console.rows;
     _doubleColumn = doubleColumn ?? width >= 80;
@@ -294,8 +301,8 @@ class WindowUI extends BaseWindow {
     startColumn =
         _doubleColumn ? ((width - 60) / 2).floor() : ((width - 20) / 2).floor();
     _curMaxMenuRow = _doubleColumn
-        ? startRow + (menu.length / 2).ceil() - 1
-        : startRow + menu.length - 1;
+        ? startRow + (menuPageSize / 2).ceil() - 1
+        : startRow + menuPageSize - 1;
 
     displayMenuTitle();
 
@@ -342,17 +349,17 @@ class WindowUI extends BaseWindow {
     }
   }
 
-  Future<void> _prePage() async {
+  Future<void> prePage() async {
     if (beforePrePage != null) await beforePrePage(this);
     if (!_isListenKey) return Future.value();
     if (menuPage <= 1) return Future.value();
     menuPage--;
     earseMenu();
-    _displayList();
+    displayList();
     return Future.value();
   }
 
-  Future<void> _nextPage() async {
+  Future<void> nextPage() async {
     if (!_isListenKey) return Future.value();
     if (menuPage >= (menu.length / menuPageSize).ceil()) return Future.value();
 
@@ -374,7 +381,7 @@ class WindowUI extends BaseWindow {
     menu.addAll(appendMenus);
     menuPage++;
     earseMenu();
-    _displayList();
+    displayList();
     return Future.value();
   }
 
@@ -405,7 +412,7 @@ class WindowUI extends BaseWindow {
       curLine = selectIndex - (menuPage - 1) * menuPageSize;
     }
     if (selectIndex >= menuPage * menuPageSize) {
-      _nextPage();
+      nextPage();
     } else {
       displayLine(curLine - 1);
       displayLine(curLine);
@@ -430,7 +437,7 @@ class WindowUI extends BaseWindow {
       curLine = selectIndex - (menuPage - 1) * menuPageSize;
     }
     if (selectIndex < (menuPage - 1) * menuPageSize) {
-      _prePage();
+      prePage();
     } else {
       displayLine(curLine + 1);
       displayLine(curLine);
