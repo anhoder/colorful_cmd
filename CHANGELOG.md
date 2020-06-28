@@ -99,3 +99,7 @@
 ## 1.5.6
 
 - fix invalid chars
+
+## 1.5.7
+
+- add bottom out hook

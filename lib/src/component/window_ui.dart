@@ -13,6 +13,7 @@ class WindowUI extends BaseWindow {
   Future<dynamic> Function(WindowUI) beforeEnterMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
   Future Function(WindowUI) beforePrePage;
+  Future<List<String>> Function(WindowUI) bottomOut;
   void Function(WindowUI) quit;
   dynamic Function(WindowUI) init;
   int selectIndex = 0;
@@ -45,6 +46,7 @@ class WindowUI extends BaseWindow {
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
       this.beforeNextPage,
+      this.bottomOut,
       this.disableTimeDisplay = false,
       this.progressRainbow = true,
       this.doubleColumn,
@@ -121,7 +123,7 @@ class WindowUI extends BaseWindow {
     } else {
       _enterFlag < 1 ? _enterFlag++ : null;
       displayList();
-      if (_enterFlag == 1) {
+      if (_enterFlag == 1 && enterMain != null) {
         enterMain(this);
       }
     }
@@ -394,25 +396,37 @@ class WindowUI extends BaseWindow {
     exit(0);
   }
 
-  void moveDown(_) {
+  Future<void> moveDown(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
     if (_doubleColumn) {
       if (selectIndex + 2 > menu.length - 1) {
+        if (bottomOut == null) return;
+        var appendMenus = await bottomOut(this);
+        if (appendMenus.isNotEmpty) {
+          menu.addAll(appendMenus);
+        }
+        displayList();
         return;
       }
       selectIndex += 2;
       curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     } else {
       if (selectIndex + 1 > menu.length - 1) {
+        if (bottomOut == null) return;
+        var appendMenus = await bottomOut(this);
+        if (appendMenus.isNotEmpty) {
+          menu.addAll(appendMenus);
+        }
+        displayList();
         return;
       }
       selectIndex++;
       curLine = selectIndex - (menuPage - 1) * menuPageSize;
     }
     if (selectIndex >= menuPage * menuPageSize) {
-      nextPage();
+      await nextPage();
     } else {
       displayLine(curLine - 1);
       displayLine(curLine);
@@ -455,12 +469,20 @@ class WindowUI extends BaseWindow {
     displayLine(curLine);
   }
 
-  void moveRight(_) {
+  Future<void> moveRight(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (!_doubleColumn ||
-        selectIndex % 2 != 0 ||
-        selectIndex + 1 > menu.length - 1) {
+        selectIndex % 2 != 0) {
+      return;
+    }
+    if (selectIndex + 1 > menu.length - 1) {
+      if (bottomOut == null) return;
+      var appendMenus = await bottomOut(this);
+      if (appendMenus.isNotEmpty) {
+        menu.addAll(appendMenus);
+      }
+      displayList();
       return;
     }
     selectIndex += 1;

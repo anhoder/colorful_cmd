@@ -50,6 +50,10 @@ void main(List<String> args) {
         }
         return [];
       },
+      bottomOut: (ui) async {
+        await Future.delayed(Duration(seconds: 1));
+        return ['test'];
+      },
       menuPageSize: 10,
       // doubleColumn: false,
       // lang: Chinese() // lang
