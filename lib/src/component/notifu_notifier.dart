@@ -1,12 +1,12 @@
 part of component;
 
-class NotifySendNotifier implements INotifier {
-  static const String _command = 'notify-send';
+class NotifuNotifier implements INotifier {
+  static const String _command = 'notifu';
 
   @override
   bool isAvailable() {
     try {
-      var result = Process.runSync('which', [_command]);
+      var result = Process.runSync('where', [_command]);
       if (result.exitCode != 0) return false;
       return true;
     } catch (e) {
@@ -16,13 +16,13 @@ class NotifySendNotifier implements INotifier {
 
   @override
   void send(String message, {String title, String subtitle, String soundName, String groupID, String activateID, String appIcon, String contentImage, String openURL, String executeCmd}) {
-    var args = <String>[];
-    if (groupID != null) args.addAll(['-a', groupID]);
-    if (appIcon != null) args.addAll(['-i', appIcon]);
-    if (title != null) args.add(title);
-    
-    args.add(message);
+    var args = <String>['/d', '2000'];
+    if (title != null) {
+      args.addAll(['/p', title]);
+    }
+    args.addAll(['/m', message]);
 
     Process.run(_command, args);
   }
+  
 }

@@ -22,3 +22,4 @@ part 'src/component/notifier_proxy.dart';
 part 'src/component/terminal_notifier.dart';
 part 'src/component/apple_script_notifier.dart';
 part 'src/component/notify_send_notifier.dart';
+part 'src/component/notifu_notifier.dart';

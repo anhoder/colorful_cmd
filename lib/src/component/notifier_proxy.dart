@@ -1,31 +1,27 @@
 part of component;
 
 class NotifierProxy {
-  INotifier _linuxNotifier;
-  INotifier _macNotifier;
-  INotifier _winNotifier;
+  INotifier _notifier;
 
   NotifierProxy({List<INotifier> linux, List<INotifier> mac, List<INotifier> win}) {
-    if (linux != null) {
+    if (Platform.isLinux && linux != null) {
       for (var i = 0; i < linux.length; i++) {
         if (linux[i].isAvailable()) {
-          _linuxNotifier = linux[i];
+          _notifier = linux[i];
           break;
         }
       }
-    }
-    if (mac != null) {
+    } else if (Platform.isMacOS && mac != null) {
       for (var i = 0; i < mac.length; i++) {
         if (mac[i].isAvailable()) {
-          _macNotifier = mac[i];
+          _notifier = mac[i];
           break;
         }
       }
-    }
-    if (win != null) {
+    } else if (Platform.isWindows && win != null) {
       for (var i = 0; i < win.length; i++) {
         if (win[i].isAvailable()) {
-          _winNotifier = win[i];
+          _notifier = win[i];
           break;
         }
       }
@@ -33,17 +29,9 @@ class NotifierProxy {
   }
 
   void send(String message, {String title, String subtitle, String soundName, String groupID, String activateID, String appIcon, String contentImage, String openURL, String executeCmd}) {
-    INotifier notifier;
-    if (Platform.isLinux) {
-      notifier = _linuxNotifier;
-    } else if (Platform.isMacOS) {
-      notifier = _macNotifier;
-    } else if (Platform.isWindows) {
-      notifier = _winNotifier;
-    }
 
-    if (notifier == null) return;
+    if (_notifier == null) return;
 
-    notifier.send(message, title: title, subtitle: subtitle, soundName: soundName, groupID: groupID, activateID: activateID, appIcon: appIcon, contentImage: contentImage, openURL: openURL, executeCmd: executeCmd);
+    _notifier.send(message, title: title, subtitle: subtitle, soundName: soundName, groupID: groupID, activateID: activateID, appIcon: appIcon, contentImage: contentImage, openURL: openURL, executeCmd: executeCmd);
   }
 }

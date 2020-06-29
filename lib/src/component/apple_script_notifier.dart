@@ -5,9 +5,13 @@ class AppleScriptNotifier implements INotifier {
 
   @override
   bool isAvailable() {
-    var result = Process.runSync('which', [_command]);
-    if (result.exitCode != 0) return false;
-    return true;
+    try {
+      var result = Process.runSync('which', [_command]);
+      if (result.exitCode != 0) return false;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override
