@@ -396,30 +396,38 @@ class WindowUI extends BaseWindow {
     exit(0);
   }
 
+  Future<void> callBottomOut([int itemNum = 1]) async {
+    if (bottomOut == null) return;
+    var appendMenus = await bottomOut(this);
+    if (appendMenus.isNotEmpty) {
+      menu.addAll(appendMenus);
+    }
+    if (appendMenus.isEmpty) return;
+    if (menu.length - 1 - selectIndex >= itemNum) {
+      selectIndex += itemNum;
+    } else {
+      selectIndex++;
+    }
+    if (selectIndex > (menuPage - 1) * menuPageSize) {
+      await nextPage();
+    }
+    displayList();
+  }
+
   Future<void> moveDown(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
     if (_doubleColumn) {
       if (selectIndex + 2 > menu.length - 1) {
-        if (bottomOut == null) return;
-        var appendMenus = await bottomOut(this);
-        if (appendMenus.isNotEmpty) {
-          menu.addAll(appendMenus);
-        }
-        displayList();
+        await callBottomOut(2);
         return;
       }
       selectIndex += 2;
       curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     } else {
       if (selectIndex + 1 > menu.length - 1) {
-        if (bottomOut == null) return;
-        var appendMenus = await bottomOut(this);
-        if (appendMenus.isNotEmpty) {
-          menu.addAll(appendMenus);
-        }
-        displayList();
+        await callBottomOut(1);
         return;
       }
       selectIndex++;
@@ -477,12 +485,7 @@ class WindowUI extends BaseWindow {
       return;
     }
     if (selectIndex + 1 > menu.length - 1) {
-      if (bottomOut == null) return;
-      var appendMenus = await bottomOut(this);
-      if (appendMenus.isNotEmpty) {
-        menu.addAll(appendMenus);
-      }
-      displayList();
+      await callBottomOut(1);
       return;
     }
     selectIndex += 1;
