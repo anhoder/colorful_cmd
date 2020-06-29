@@ -103,3 +103,7 @@
 ## 1.5.7
 
 - add bottom out hook
+
+## 1.5.8
+
+- update bottom out hook
