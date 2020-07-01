@@ -63,10 +63,6 @@ class RainbowProgress {
   }
 
   void update(int progress) {
-    if (progress == current) {
-      return;
-    }
-
     current = progress;
 
     var ratio = progress / complete;
@@ -86,16 +82,18 @@ class RainbowProgress {
 
     for (var x = 1; x < count; x++, colorIndex++) {
       var content = ColorText();
-      if (rainbow)
+      if (rainbow) {
         content.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+      }
 
       content.text(completeChar).normal();
       out.write(content);
     }
 
     var forward = ColorText();
-    if (rainbow)
+    if (rainbow) {
       forward.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+    }
     forward.text(forwardChar).normal();
     out.write(forward.toString());
     colorIndex++;

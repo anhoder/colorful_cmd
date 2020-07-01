@@ -111,3 +111,7 @@
 ## 1.5.9
 
 - update bottom out hook
+
+## 1.6.0
+
+- update rainbow progress
