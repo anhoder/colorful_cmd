@@ -1,19 +1,19 @@
 part of utils;
 
-const List<Color> COLOR_MAP = [
-  Color.RED,
-  Color.DARK_RED,
-  Color.LIME,
-  Color.GREEN,
-  Color.GOLD,
-  Color.YELLOW,
-  Color.BLUE,
-  Color.DARK_BLUE,
-  Color.MAGENTA,
-  Color.LIGHT_MAGENTA,
-  Color.CYAN,
-  Color.LIGHT_CYAN,
-  Color.WHITE
+List<Color> COLOR_MAP = [
+  Colors.RED,
+  Colors.DARK_RED,
+  Colors.LIME,
+  Colors.GREEN,
+  Colors.GOLD,
+  Colors.YELLOW,
+  Colors.BLUE,
+  Colors.DARK_BLUE,
+  Colors.MAGENTA,
+  Colors.LIGHT_MAGENTA,
+  Colors.CYAN,
+  Colors.LIGHT_CYAN,
+  Colors.WHITE
 ];
 
 Color randomColor() {

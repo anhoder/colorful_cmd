@@ -3,11 +3,19 @@ part of utils;
 class ColorText {
   Color _currentTextColor;
   Color _currentBgColor;
+  bool isXterm = false;
   final StringBuffer _buffer = StringBuffer();
 
-  ColorText setTextColor(int id, {bool xterm = false, bool bright = false}) {
+  ColorText() {
+    var env = Platform.environment;
+    if (!env.containsKey('TERM')) return;
+    if (!env['TERM'].contains('256')) return;
+    isXterm = true;
+  }
+
+  ColorText setTextColor(int id, {bool bright = false}) {
     Color color;
-    if (xterm) {
+    if (isXterm) {
       var c = id.clamp(0, 256);
       color = Color(c, xterm: true);
       sgr(38, [5, c]);
@@ -26,9 +34,9 @@ class ColorText {
   Color getTextColor() => _currentTextColor;
 
   ColorText setBackgroundColor(int id,
-      {bool xterm = false, bool bright = false}) {
+      {bool bright = false}) {
     Color color;
-    if (xterm) {
+    if (isXterm) {
       var c = id.clamp(0, 256);
       color = Color(c, xterm: true);
       sgr(48, [5, c]);
@@ -69,7 +77,7 @@ class ColorText {
   String toString() => _buffer.toString();
 
   ColorText setColor(Color color) {
-    setTextColor(color.id, xterm: color.xterm, bright: color.bright);
+    setTextColor(color.id, bright: color.bright);
     return this;
   }
 
@@ -87,37 +95,37 @@ class ColorText {
     return this;
   }
 
-  ColorText black(str) => paintingText(str, Color.BLACK);
+  ColorText black(str) => paintingText(str, Colors.BLACK);
 
-  ColorText blue(str) => paintingText(str, Color.BLUE);
+  ColorText blue(str) => paintingText(str, Colors.BLUE);
 
-  ColorText cyan(str) => paintingText(str, Color.CYAN);
+  ColorText cyan(str) => paintingText(str, Colors.CYAN);
 
-  ColorText darkBlue(str) => paintingText(str, Color.DARK_BLUE);
+  ColorText darkBlue(str) => paintingText(str, Colors.DARK_BLUE);
 
-  ColorText darkRed(str) => paintingText(str, Color.DARK_RED);
+  ColorText darkRed(str) => paintingText(str, Colors.DARK_RED);
 
-  ColorText gold(str) => paintingText(str, Color.GOLD);
+  ColorText gold(str) => paintingText(str, Colors.GOLD);
 
-  ColorText gray(str) => paintingText(str, Color.GRAY);
+  ColorText gray(str) => paintingText(str, Colors.GRAY);
 
-  ColorText green(str) => paintingText(str, Color.GREEN);
+  ColorText green(str) => paintingText(str, Colors.GREEN);
 
-  ColorText lightCyan(str) => paintingText(str, Color.LIGHT_CYAN);
+  ColorText lightCyan(str) => paintingText(str, Colors.LIGHT_CYAN);
 
-  ColorText lightGray(str) => paintingText(str, Color.LIGHT_GRAY);
+  ColorText lightGray(str) => paintingText(str, Colors.LIGHT_GRAY);
 
-  ColorText lightMagenta(str) => paintingText(str, Color.LIGHT_MAGENTA);
+  ColorText lightMagenta(str) => paintingText(str, Colors.LIGHT_MAGENTA);
 
-  ColorText lime(str) => paintingText(str, Color.LIME);
+  ColorText lime(str) => paintingText(str, Colors.LIME);
 
-  ColorText magenta(str) => paintingText(str, Color.MAGENTA);
+  ColorText magenta(str) => paintingText(str, Colors.MAGENTA);
 
-  ColorText red(str) => paintingText(str, Color.RED);
+  ColorText red(str) => paintingText(str, Colors.RED);
 
-  ColorText white(str) => paintingText(str, Color.WHITE);
+  ColorText white(str) => paintingText(str, Colors.WHITE);
 
-  ColorText yellow(str) => paintingText(str, Color.YELLOW);
+  ColorText yellow(str) => paintingText(str, Colors.YELLOW);
 
   void print() => stdout.write(_buffer);
 }
