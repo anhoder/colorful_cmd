@@ -11,6 +11,7 @@ class WindowUI extends BaseWindow {
   List<String> menu;
   void Function(WindowUI) enterMain;
   Future<dynamic> Function(WindowUI) beforeEnterMenu;
+  Future<void> Function(WindowUI) beforeBackMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
   Future Function(WindowUI) beforePrePage;
   Future<List<String>> Function(WindowUI) bottomOut;
@@ -45,6 +46,7 @@ class WindowUI extends BaseWindow {
       this.lang,
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
+      this.beforeBackMenu,
       this.beforeNextPage,
       this.bottomOut,
       this.disableTimeDisplay = false,
@@ -203,11 +205,13 @@ class WindowUI extends BaseWindow {
     }
   }
 
-  void backMenu(_) {
+  Future<void> backMenu(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (menuStack.isEmpty) return;
     var menuItem = menuStack.removeLast();
+
+    beforeBackMenu == null ? null : await beforeBackMenu(this);
 
     earseMenu();
     menu = menuItem.list;

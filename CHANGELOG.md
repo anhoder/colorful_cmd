@@ -115,3 +115,7 @@
 ## 1.6.0
 
 - update rainbow progress
+
+## 1.6.1
+
+- WindowUI add menu back hook

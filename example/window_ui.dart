@@ -41,6 +41,11 @@ void main(List<String> args) {
             return Future.value(false);
         }
       },
+      beforeBackMenu: (ui) async {
+        Console.moveCursor(row: ui.startRow + 1);
+        print('I am backing...');
+        await Future.delayed(Duration(seconds: 1));
+      },
       beforeNextPage: (ui) async {
         await Future.delayed(Duration(seconds: 1));
         if (ui.menuPage == 1)  {
