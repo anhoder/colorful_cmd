@@ -117,7 +117,10 @@ abstract class ICmd<T> extends Command<T> {
   }
 
   /// print info
-  void info(Object text, [Color color = Color.CYAN]) => printInfo(text, color);
+  void info(Object text, [Color color]) {
+    color ??= Colors.CYAN;
+    printInfo(text, color);
+  }
 
   void debug(Object text) => printDebug(text);
 

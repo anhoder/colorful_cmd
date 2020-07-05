@@ -116,8 +116,8 @@ class WindowUI extends BaseWindow {
           var column = ((Console.columns - 28) / 2).floor();
           Console.write('\r');
           Console.moveToColumn(column);
-          Console.setTextColor(Color.GRAY.id,
-              bright: Color.GRAY.bright, xterm: Color.GRAY.xterm);
+          Console.setTextColor(Colors.GRAY.id,
+              bright: Colors.GRAY.bright, xterm: Colors.GRAY.xterm);
           Console.write(
               ' Enter after ${(welcomeDuration / 1000 - timer.tick * (interval / 1000)).toStringAsFixed(1)} seconds... ');
         }
@@ -285,15 +285,15 @@ class WindowUI extends BaseWindow {
       Console.resetAll();
       var row = startRow > 4 ? startRow - 3 : 2;
       Console.moveCursor(row: row, column: startColumn);
-      Console.setTextColor(Color.GREEN.id,
-          bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
+      Console.setTextColor(Colors.GREEN.id,
+          bright: Colors.GREEN.bright, xterm: Colors.GREEN.xterm);
       Console.eraseLine();
       Console.write(title);
     } else if (!showTitle && startRow > 1) {
       var row = startRow > 3 ? startRow - 3 : 2;
       Console.moveCursor(row: row, column: startColumn);
-      Console.setTextColor(Color.GREEN.id,
-          bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
+      Console.setTextColor(Colors.GREEN.id,
+          bright: Colors.GREEN.bright, xterm: Colors.GREEN.xterm);
       Console.eraseLine();
       Console.write(title);
     }
@@ -313,7 +313,7 @@ class WindowUI extends BaseWindow {
     displayMenuTitle();
 
     Console.resetAll();
-    Console.setTextColor(Color.WHITE.id, bright: false, xterm: false);
+    Console.setTextColor(Colors.WHITE.id, bright: Colors.WHITE.bright, xterm: Colors.WHITE.xterm);
     var curMenus = menu.getRange((menuPage - 1) * menuPageSize,
         min(menu.length, menuPage * menuPageSize));
     var lines = _doubleColumn ? (curMenus.length / 2).ceil() : curMenus.length;

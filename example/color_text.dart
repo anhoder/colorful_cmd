@@ -20,7 +20,7 @@ void main(List<String> args) {
       .white('white\n')
       .black('black\n')
       .yellow('yellow\n')
-      .setBackgroundColor(Color.GREEN.id)
+      .setBackgroundColor(Colors.GREEN.id)
       .white('green bg color')
       .print();
 }
