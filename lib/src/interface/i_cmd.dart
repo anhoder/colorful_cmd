@@ -138,7 +138,7 @@ abstract class ICmd<T> extends Command<T> {
 
   String _getTitle() {
     if (runner.showTitle) {
-      return TextPen()
+      return ColorText()
           .setColor(runner.titleColor)
           .text('${formatChars(runner.executableName)}\n')
           .normal()

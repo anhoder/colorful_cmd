@@ -149,7 +149,7 @@ class ConsoleKernel<T> extends CommandRunner<T> {
   /// get title.
   String _getTitle() {
     if (showTitle) {
-      return TextPen()
+      return ColorText()
           .setColor(titleColor)
           .text('${formatChars(executableName)}\n')
           .normal()
