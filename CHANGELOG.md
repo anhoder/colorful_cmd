@@ -119,3 +119,7 @@
 ## 1.6.1
 
 - add. Colors
+
+## 1.6.2
+
+- WindowUI add menu back hook
