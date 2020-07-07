@@ -123,3 +123,7 @@
 ## 1.6.2
 
 - WindowUI add menu back hook
+
+## 1.6.3
+
+- fix title color
