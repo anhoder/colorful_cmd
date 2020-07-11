@@ -90,4 +90,44 @@
 
 ## 1.5.4
 
+- WindowUI add enter hook
+
+## 1.5.5
+
+- add command notifier
+
+## 1.5.6
+
+- fix invalid chars
+
+## 1.5.7
+
+- add bottom out hook
+
+## 1.5.8
+
+- update bottom out hook
+
+## 1.5.9
+
+- update bottom out hook
+
+## 1.6.0
+
+- update rainbow progress
+
+## 1.6.1
+
+- add. Colors
+
+## 1.6.2
+
+- WindowUI add menu back hook
+
+## 1.6.3
+
+- fix title color
+
+## 1.6.4
+
 - update WindowUI quit method

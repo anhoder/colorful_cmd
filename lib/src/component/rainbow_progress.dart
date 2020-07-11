@@ -1,28 +1,28 @@
 part of component;
 
-const List<Color> RainbowColors = [
-  Color.RED,
-  Color.DARK_RED,
-  Color.GOLD,
-  Color.YELLOW,
-  Color.LIME,
-  Color.GREEN,
-  Color.LIGHT_CYAN,
-  Color.CYAN,
-  Color.BLUE,
-  Color.DARK_BLUE,
-  Color.LIGHT_MAGENTA,
-  Color.MAGENTA,
-  Color.LIGHT_MAGENTA,
-  Color.DARK_BLUE,
-  Color.BLUE,
-  Color.CYAN,
-  Color.LIGHT_CYAN,
-  Color.GREEN,
-  Color.LIME,
-  Color.YELLOW,
-  Color.GOLD,
-  Color.DARK_RED,
+List<Color> RainbowColors = [
+  Colors.RED,
+  Colors.DARK_RED,
+  Colors.GOLD,
+  Colors.YELLOW,
+  Colors.LIME,
+  Colors.GREEN,
+  Colors.LIGHT_CYAN,
+  Colors.CYAN,
+  Colors.BLUE,
+  Colors.DARK_BLUE,
+  Colors.LIGHT_MAGENTA,
+  Colors.MAGENTA,
+  Colors.LIGHT_MAGENTA,
+  Colors.DARK_BLUE,
+  Colors.BLUE,
+  Colors.CYAN,
+  Colors.LIGHT_CYAN,
+  Colors.GREEN,
+  Colors.LIME,
+  Colors.YELLOW,
+  Colors.GOLD,
+  Colors.DARK_RED,
 ];
 
 class RainbowProgress {
@@ -63,10 +63,6 @@ class RainbowProgress {
   }
 
   void update(int progress) {
-    if (progress == current) {
-      return;
-    }
-
     current = progress;
 
     var ratio = progress / complete;
@@ -86,16 +82,18 @@ class RainbowProgress {
 
     for (var x = 1; x < count; x++, colorIndex++) {
       var content = ColorText();
-      if (rainbow)
+      if (rainbow) {
         content.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+      }
 
       content.text(completeChar).normal();
       out.write(content);
     }
 
     var forward = ColorText();
-    if (rainbow)
+    if (rainbow) {
       forward.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+    }
     forward.text(forwardChar).normal();
     out.write(forward.toString());
     colorIndex++;

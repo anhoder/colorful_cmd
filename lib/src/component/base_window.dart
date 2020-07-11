@@ -27,7 +27,7 @@ abstract class BaseWindow {
       });
     }
 
-    Keyboard.echoUnhandledKeys = false;
+    Keys.echoUnhandledKeys = false;
   }
 
   void draw() {

@@ -9,9 +9,12 @@ class WindowUI extends BaseWindow {
   int welcomeDuration;
   ILang lang;
   List<String> menu;
+  void Function(WindowUI) enterMain;
   Future<dynamic> Function(WindowUI) beforeEnterMenu;
+  Future<void> Function(WindowUI) beforeBackMenu;
   Future<List<String>> Function(WindowUI) beforeNextPage;
   Future Function(WindowUI) beforePrePage;
+  Future<List<String>> Function(WindowUI) bottomOut;
   void Function(WindowUI) quit;
   dynamic Function(WindowUI) init;
   int selectIndex = 0;
@@ -30,6 +33,7 @@ class WindowUI extends BaseWindow {
   final List<_MenuItem> menuStack = [];
   int _curMaxMenuRow;
   bool _isListenKey = true;
+  int _enterFlag = 0;
 
   WindowUI(
       {this.showTitle = true,
@@ -42,11 +46,14 @@ class WindowUI extends BaseWindow {
       this.lang,
       defaultMenuTitle = 'Main Menu',
       this.beforeEnterMenu,
+      this.beforeBackMenu,
       this.beforeNextPage,
+      this.bottomOut,
       this.disableTimeDisplay = false,
       this.progressRainbow = true,
       this.doubleColumn,
       this.init,
+      this.enterMain,
       this.quit,
       this.beforePrePage,
       this.menuPageSize = 10})
@@ -109,36 +116,40 @@ class WindowUI extends BaseWindow {
           var column = ((Console.columns - 28) / 2).floor();
           Console.write('\r');
           Console.moveToColumn(column);
-          Console.setTextColor(Color.GRAY.id,
-              bright: Color.GRAY.bright, xterm: Color.GRAY.xterm);
+          Console.setTextColor(Colors.GRAY.id,
+              bright: Colors.GRAY.bright, xterm: Colors.GRAY.xterm);
           Console.write(
               ' Enter after ${(welcomeDuration / 1000 - timer.tick * (interval / 1000)).toStringAsFixed(1)} seconds... ');
         }
       });
     } else {
+      _enterFlag < 1 ? _enterFlag++ : null;
       displayList();
+      if (_enterFlag == 1 && enterMain != null) {
+        enterMain(this);
+      }
     }
   }
 
   @override
   void initialize() {
-    Keyboard.bindKeys(['q', 'Q']).listen(_quit);
-    Keyboard.bindKeys([KeyName.UP, 'k', 'K']).listen(moveUp);
-    Keyboard.bindKeys([KeyName.DOWN, 'j', 'J']).listen(moveDown);
-    Keyboard.bindKeys([KeyName.LEFT, 'h', 'H']).listen(moveLeft);
-    Keyboard.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(moveRight);
-    Keyboard.bindKeys([KeyName.ENTER, KeyName.WIN_ENTER, 'n', 'N']).listen(enterMenu);
-    Keyboard.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
+    Keys.bindKeys(['q', 'Q']).listen(_quit);
+    Keys.bindKeys([KeyName.UP, 'k', 'K']).listen(moveUp);
+    Keys.bindKeys([KeyName.DOWN, 'j', 'J']).listen(moveDown);
+    Keys.bindKeys([KeyName.LEFT, 'h', 'H']).listen(moveLeft);
+    Keys.bindKeys([KeyName.RIGHT, 'l', 'L']).listen(moveRight);
+    Keys.bindKeys([KeyName.ENTER, KeyName.WIN_ENTER, 'n', 'N']).listen(enterMenu);
+    Keys.bindKeys([KeyName.ESC, 'b', 'B']).listen(backMenu);
     if (init != null) init(this);
   }
 
   WindowUI bindKey(String key, void Function(String key) func) {
-    Keyboard.bindKey(key).listen(func);
+    Keys.bindKey(key).listen(func);
     return this;
   }
 
   WindowUI bindKeys(List<String> keys, void Function(String key) func) {
-    Keyboard.bindKeys(keys).listen(func);
+    Keys.bindKeys(keys).listen(func);
     return this;
   }
 
@@ -194,11 +205,13 @@ class WindowUI extends BaseWindow {
     }
   }
 
-  void backMenu(_) {
+  Future<void> backMenu(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (menuStack.isEmpty) return;
     var menuItem = menuStack.removeLast();
+
+    beforeBackMenu == null ? null : await beforeBackMenu(this);
 
     earseMenu();
     menu = menuItem.list;
@@ -272,15 +285,15 @@ class WindowUI extends BaseWindow {
       Console.resetAll();
       var row = startRow > 4 ? startRow - 3 : 2;
       Console.moveCursor(row: row, column: startColumn);
-      Console.setTextColor(Color.GREEN.id,
-          bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
+      Console.setTextColor(Colors.GREEN.id,
+          bright: Colors.GREEN.bright, xterm: Colors.GREEN.xterm);
       Console.eraseLine();
       Console.write(title);
     } else if (!showTitle && startRow > 1) {
       var row = startRow > 3 ? startRow - 3 : 2;
       Console.moveCursor(row: row, column: startColumn);
-      Console.setTextColor(Color.GREEN.id,
-          bright: Color.GREEN.bright, xterm: Color.GREEN.xterm);
+      Console.setTextColor(Colors.GREEN.id,
+          bright: Colors.GREEN.bright, xterm: Colors.GREEN.xterm);
       Console.eraseLine();
       Console.write(title);
     }
@@ -300,7 +313,7 @@ class WindowUI extends BaseWindow {
     displayMenuTitle();
 
     Console.resetAll();
-    Console.setTextColor(Color.WHITE.id, bright: false, xterm: false);
+    Console.setTextColor(Colors.WHITE.id, bright: Colors.WHITE.bright, xterm: Colors.WHITE.xterm);
     var curMenus = menu.getRange((menuPage - 1) * menuPageSize,
         min(menu.length, menuPage * menuPageSize));
     var lines = _doubleColumn ? (curMenus.length / 2).ceil() : curMenus.length;
@@ -387,25 +400,45 @@ class WindowUI extends BaseWindow {
     exit(0);
   }
 
-  void moveDown(_) {
+  Future<void> callBottomOut([int itemNum = 1]) async {
+    if (bottomOut == null) return;
+    var appendMenus = await bottomOut(this);
+    if (appendMenus.isNotEmpty) {
+      menu.addAll(appendMenus);
+    }
+    if (appendMenus.isEmpty) return;
+    if (menu.length - 1 - selectIndex >= itemNum) {
+      selectIndex += itemNum;
+    } else {
+      selectIndex++;
+    }
+    if (selectIndex > (menuPage - 1) * menuPageSize) {
+      await nextPage();
+    }
+    displayList();
+  }
+
+  Future<void> moveDown(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     int curLine;
     if (_doubleColumn) {
       if (selectIndex + 2 > menu.length - 1) {
+        await callBottomOut(2);
         return;
       }
       selectIndex += 2;
       curLine = ((selectIndex - (menuPage - 1) * menuPageSize) / 2).floor();
     } else {
       if (selectIndex + 1 > menu.length - 1) {
+        await callBottomOut(1);
         return;
       }
       selectIndex++;
       curLine = selectIndex - (menuPage - 1) * menuPageSize;
     }
     if (selectIndex >= menuPage * menuPageSize) {
-      nextPage();
+      await nextPage();
     } else {
       displayLine(curLine - 1);
       displayLine(curLine);
@@ -448,12 +481,15 @@ class WindowUI extends BaseWindow {
     displayLine(curLine);
   }
 
-  void moveRight(_) {
+  Future<void> moveRight(_) async {
     if (!_isListenKey) return;
     if (showWelcome && !_hasShownWelcome) return;
     if (!_doubleColumn ||
-        selectIndex % 2 != 0 ||
-        selectIndex + 1 > menu.length - 1) {
+        selectIndex % 2 != 0) {
+      return;
+    }
+    if (selectIndex + 1 > menu.length - 1) {
+      await callBottomOut(1);
       return;
     }
     selectIndex += 1;
