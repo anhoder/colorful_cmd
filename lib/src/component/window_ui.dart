@@ -29,9 +29,9 @@ class WindowUI extends BaseWindow {
   bool _hasShownWelcome = false;
   int startRow;
   int startColumn;
+  int curMaxMenuRow;
   bool _doubleColumn;
   final List<_MenuItem> menuStack = [];
-  int _curMaxMenuRow;
   bool _isListenKey = true;
   int _enterFlag = 0;
 
@@ -173,7 +173,7 @@ class WindowUI extends BaseWindow {
         Console.write(element);
         row++;
       });
-      _curMaxMenuRow = row - 1;
+      curMaxMenuRow = row - 1;
     } else {
       _isListenKey = false;
       var originMenuTitle = menuTitle;
@@ -215,7 +215,7 @@ class WindowUI extends BaseWindow {
 
     earseMenu();
     menu = menuItem.list;
-    _curMaxMenuRow = _doubleColumn
+    curMaxMenuRow = _doubleColumn
         ? startRow + (menuPageSize / 2).ceil() - 1
         : startRow + menuPageSize - 1;
     selectIndex = menuItem.index;
@@ -230,7 +230,7 @@ class WindowUI extends BaseWindow {
     _repeatFunction((i) {
       Console.moveCursor(row: startRow + i - 1);
       Console.eraseLine();
-    }, _curMaxMenuRow - startRow + 1);
+    }, curMaxMenuRow - startRow + 1);
   }
 
   void _displayWelcome(String welcomeMsg) {
@@ -306,7 +306,7 @@ class WindowUI extends BaseWindow {
     startRow = (height / 3).floor();
     startColumn =
         _doubleColumn ? ((width - 60) / 2).floor() : ((width - 20) / 2).floor();
-    _curMaxMenuRow = _doubleColumn
+    curMaxMenuRow = _doubleColumn
         ? startRow + (menuPageSize / 2).ceil() - 1
         : startRow + menuPageSize - 1;
 

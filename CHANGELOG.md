@@ -131,3 +131,7 @@
 ## 1.6.4
 
 - update WindowUI quit method
+
+## 1.6.5
+
+- WindowUI expose maxMenuRow
