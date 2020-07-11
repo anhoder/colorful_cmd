@@ -331,7 +331,7 @@ class WindowUI extends BaseWindow {
   void _displayItem(int index) {
     Console.moveCursorBack(4);
     var menuName = toLocal(lang, menu[index]);
-    menuName = menuName.length > 50 ? menuName.substring(0, 50) : menuName;
+    menuName = menuName.length > 40 ? menuName.substring(0, 40) : menuName;
     if (selectIndex == index) {
       Console.setTextColor(primaryColor.id,
           bright: primaryColor.bright, xterm: primaryColor.xterm);
@@ -379,11 +379,11 @@ class WindowUI extends BaseWindow {
   }
 
   void _quit(_) {
-    if (quit != null) quit(this);
     Console.showCursor();
     close();
     Console.resetAll();
     Console.eraseDisplay();
+    if (quit != null) quit(this);
     exit(0);
   }
 

@@ -87,3 +87,7 @@
 ## 1.5.3
 
 - WindowUI expose prePage, nextPage, displayList
+
+## 1.5.4
+
+- update WindowUI quit method
