@@ -24,6 +24,7 @@ class WindowUI extends BaseWindow {
   bool doubleColumn;
   bool disableTimeDisplay = false;
   dynamic pageData;
+  bool showHelp;
 
   String menuTitle;
   bool _hasShownWelcome = false;
@@ -38,6 +39,7 @@ class WindowUI extends BaseWindow {
   WindowUI(
       {this.showTitle = true,
       this.showWelcome = true,
+      this.showHelp = true,
       this.welcomeMsg = 'win-ui',
       dynamic primaryColor = 'random',
       this.welcomeDuration = 2000,
@@ -70,10 +72,12 @@ class WindowUI extends BaseWindow {
 
     if (defaultMenuTitle != null) menuTitle = defaultMenuTitle;
 
-    if (menu == null) {
-      menu = ['Help'];
-    } else {
-      menu.add('Help');
+    if (showHelp) {
+      if (menu == null) {
+        menu = ['Help'];
+      } else {
+        menu.add('Help');
+      }
     }
 
     Console.hideCursor();

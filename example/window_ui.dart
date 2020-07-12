@@ -9,6 +9,7 @@ import 'lang/chinese.dart';
 void main(List<String> args) {
   var window = WindowUI(
       welcomeMsg: 'WIN-UI',
+      showHelp: false,
       menu: [
         'Pay',
         'Collection',

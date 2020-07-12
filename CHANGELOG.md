@@ -135,3 +135,7 @@
 ## 1.6.5
 
 - WindowUI expose maxMenuRow
+
+## 1.6.6
+
+- WindowUI hide help option
