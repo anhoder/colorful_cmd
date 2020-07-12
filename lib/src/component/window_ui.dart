@@ -164,7 +164,7 @@ class WindowUI extends BaseWindow {
     menuStack.add(_MenuItem(menu, selectIndex, menuTitle, pageData));
     var mTitle = menu[selectIndex];
 
-    if (menuStack.length == 1 && selectIndex == menu.length - 1) {
+    if (showHelp && menuStack.length == 1 && selectIndex == menu.length - 1) {
       earseMenu();
       menu = [];
       selectIndex = 0;

@@ -139,3 +139,7 @@
 ## 1.6.6
 
 - WindowUI hide help option
+
+## 1.6.7
+
+- WindowUI fix hide help
