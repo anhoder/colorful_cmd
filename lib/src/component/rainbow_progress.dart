@@ -25,6 +25,32 @@ List<Color> RainbowColors = [
   Colors.DARK_RED,
 ];
 
+
+List<Color> getXtermRainbowColors() {
+  var starts = [
+    16,17,18,19,20,21,
+    52,53,54,55,56,57,
+    88,89,90,91,92,93,
+    124,125,126,127,128,129,
+    160,161,162,163,164,165,
+    196,197,198,199,200,201,
+  ];
+  var startIndex = Random().nextInt(starts.length - 1);
+  var start = starts[startIndex];
+  return [
+    Color(start, xterm: true),
+    Color(start + 6, xterm: true),
+    Color(start + 12, xterm: true),
+    Color(start + 18, xterm: true),
+    Color(start + 24, xterm: true),
+    Color(start + 30, xterm: true),
+    Color(start + 24, xterm: true),
+    Color(start + 18, xterm: true),
+    Color(start + 12, xterm: true),
+    Color(start + 6, xterm: true),
+  ];
+}
+
 class RainbowProgress {
   final int complete;
   final bool showPercent;
@@ -41,6 +67,7 @@ class RainbowProgress {
   int width;
   int current = 0;
   int _startColorIndex;
+  List<Color> _rainbowColors;
 
   /// Creates a Progress Bar.
   ///
@@ -59,7 +86,13 @@ class RainbowProgress {
       this.rainbow = true,
       this.showPercent = true}) {
     width ??= Console.columns;
-    _startColorIndex = Random().nextInt(RainbowColors.length - 1);
+    Colors.init();
+    if (Colors.isXterm) {
+      _rainbowColors = getXtermRainbowColors();
+    } else {
+      _rainbowColors = RainbowColors;
+    }
+    _startColorIndex = Random().nextInt(_rainbowColors.length - 1);
   }
 
   void update(int progress) {
@@ -83,7 +116,7 @@ class RainbowProgress {
     for (var x = 1; x < count; x++, colorIndex++) {
       var content = ColorText();
       if (rainbow) {
-        content.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+        content.setColor(_rainbowColors[colorIndex % _rainbowColors.length]);
       }
 
       content.text(completeChar).normal();
@@ -92,7 +125,7 @@ class RainbowProgress {
 
     var forward = ColorText();
     if (rainbow) {
-      forward.setColor(RainbowColors[colorIndex % RainbowColors.length]);
+      forward.setColor(_rainbowColors[colorIndex % _rainbowColors.length]);
     }
     forward.text(forwardChar).normal();
     out.write(forward.toString());

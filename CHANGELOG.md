@@ -143,3 +143,7 @@
 ## 1.6.7
 
 - WindowUI fix hide help
+
+## 1.6.8
+
+- update rainbow progress
