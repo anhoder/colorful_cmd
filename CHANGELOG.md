@@ -147,3 +147,7 @@
 ## 1.6.8
 
 - update rainbow progress
+
+## 1.6.9
+
+- update README
